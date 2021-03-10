@@ -1,0 +1,39 @@
+group 'com.dspread.flutter_plugin_qpos'
+version '1.0'
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.0'
+    }
+}
+rootProject.allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+apply plugin: 'com.android.library'
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 16
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        multiDexEnabled true
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+}
+dependencies {
+    implementation files('libs/bcprov-jdk15on-160.jar')
+    implementation files('libs/dspread_pos_sdk_debug_3.2.8.jar')
+    implementation files('libs/sun.misc.BASE64Decoder.jar')
+    implementation files('libs/fastjson-1.2.62.jar')
+    implementation files('libs/ledmanager.jar')
+    implementation 'androidx.core:core:1.1.0'
+}
