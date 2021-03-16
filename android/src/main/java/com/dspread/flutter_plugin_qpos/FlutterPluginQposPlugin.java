@@ -259,7 +259,12 @@ public class FlutterPluginQposPlugin implements FlutterPlugin, MethodCallHandler
             String value = call.argument("value");
             PosPluginHandler.pinMapSync(value);
 
-        } else {
+        } else if (call.method.equals("generateIPEK")) {
+            String ksn = call.argument("ksn");
+            String bdk = call.argument("bdk");
+            result.success(PosPluginHandler.generateIPEK(ksn,bdk));
+        }
+        else {
             result.notImplemented();
         }
     }

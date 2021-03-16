@@ -16,6 +16,10 @@ import java.util.Map;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodChannel.Result;
 
+import static com.dspread.demoui.utils.DUKPK2009_CBC.GenerateIPEK;
+import static com.dspread.demoui.utils.DUKPK2009_CBC.parseByte2HexStr;
+import static com.dspread.demoui.utils.DUKPK2009_CBC.parseHexStr2Byte;
+
 
 public class PosPluginHandler {
 
@@ -260,7 +264,16 @@ public class PosPluginHandler {
         mPos.openUart();
     }
 
+
     public static void pinMapSync(String value) {
         mPos.pinMapSync(value,20);
+    }
+
+    public static String generateIPEK(String ksn, String bdk){
+        byte[] byte_bdk = parseHexStr2Byte(bdk);
+        byte[] byte_ksn = parseHexStr2Byte(ksn);
+        byte[] ipek = GenerateIPEK(byte_ksn,byte_bdk);
+        String ipekStr = parseByte2HexStr(ipek);
+        return ipekStr;
     }
 }

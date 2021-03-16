@@ -7,15 +7,14 @@ import 'package:flutter_plugin_qpos/QPOSModel.dart';
 import 'package:meta/meta.dart' show visibleForTesting;
 import 'package:permission_handler/permission_handler.dart';
 
-
 class FlutterPluginQpos {
-
   /// Initializes the plugin and starts listening for potential platform events.
   factory FlutterPluginQpos() {
     if (_instance == null) {
       final MethodChannel methodChannel =
-      const MethodChannel('flutter_plugin_pos');
-      final EventChannel eventChannel = const EventChannel('flutter_plugin_pos_event');
+          const MethodChannel('flutter_plugin_pos');
+      final EventChannel eventChannel =
+          const EventChannel('flutter_plugin_pos_event');
 //      final EventChannel eventChannel = const EventChannel('plugins.flutter.io/charging');
 
       _instance = FlutterPluginQpos.private(methodChannel, eventChannel);
@@ -47,15 +46,13 @@ class FlutterPluginQpos {
     return _onPosListenerCalled;
   }
 
-
-
   QPOSModel _parsePosListenerCall(String state) {
     //    {"parameters":"","method":"onRequestWaitingUser"}
     QPOSModel qposModel = QPOSModel.fromJson(json.decode(state));
     return qposModel;
   }
 
-     init(String mode) {
+  init(String mode) {
     Map<String, String> params = Map<String, String>();
     params['CommunicationMode'] = mode;
     _methodChannel.invokeMethod('initPos', params);
@@ -64,7 +61,8 @@ class FlutterPluginQpos {
   Future requestPermission(String mode) async {
     // request permission
     Map<PermissionGroup, PermissionStatus> permissions =
-    await PermissionHandler().requestPermissions([PermissionGroup.location]);
+        await PermissionHandler()
+            .requestPermissions([PermissionGroup.location]);
 
     // request result
     PermissionStatus permission = await PermissionHandler()
@@ -79,120 +77,117 @@ class FlutterPluginQpos {
     }
   }
 
-
-
-    Future<String> get posSdkVersion async{
+  Future<String> get posSdkVersion async {
     String version = await _methodChannel.invokeMethod('getPosSdkVersion');
     return version;
   }
 
-    Future<void> connectBluetoothDevice(String addre) async{
-    await _methodChannel.invokeMethod('connectBluetoothDevice',{"bluetooth_addr" : addre});
+  Future<void> connectBluetoothDevice(String addre) async {
+    await _methodChannel
+        .invokeMethod('connectBluetoothDevice', {"bluetooth_addr": addre});
   }
 
   Future<void> getQposId() async {
     await _methodChannel.invokeMethod('getQposId');
   }
-  void getQposInfo() async{
+
+  void getQposInfo() async {
     await _methodChannel.invokeMethod('getQposInfo');
   }
 
-  void getUpdateCheckValue() async{
+  void getUpdateCheckValue() async {
     await _methodChannel.invokeMethod('getUpdateCheckValue');
   }
 
-  void getKeyCheckValue(int i, String s) async{
+  void getKeyCheckValue(int i, String s) async {
     Map<String, String> params = Map<String, String>();
     params['keyIndex'] = i.toString();
     params['keyType'] = s;
     await _methodChannel.invokeMethod('getKeyCheckValue');
   }
 
-  Future<void> disconnectBT() async{
+  Future<void> disconnectBT() async {
     await _methodChannel.invokeMethod('disconnectBT');
   }
 
-  Future<void> doTrade(Map map) async{
-
-    await _methodChannel.invokeMethod('doTrade',map);
+  Future<void> doTrade(Map map) async {
+    await _methodChannel.invokeMethod('doTrade', map);
   }
 
-  void setAmount(Map<String, String> params) async{
-    await _methodChannel.invokeMethod('setAmount',params);
-
+  void setAmount(Map<String, String> params) async {
+    await _methodChannel.invokeMethod('setAmount', params);
   }
 
-  void doEmvApp(String s) async{
+  void doEmvApp(String s) async {
     Map<String, String> params = Map<String, String>();
     params['EmvOption'] = s;
-    await _methodChannel.invokeMethod('doEmvApp',params);
-
+    await _methodChannel.invokeMethod('doEmvApp', params);
   }
 
-  void sendTime(String s) async{
+  void sendTime(String s) async {
     Map<String, String> params = Map<String, String>();
     params['terminalTime'] = s;
-    await _methodChannel.invokeMethod('sendTime',params);
-
+    await _methodChannel.invokeMethod('sendTime', params);
   }
 
-  Future<HashMap> getNFCBatchData() async{
-     Future<HashMap> map =  await _methodChannel.invokeMethod('getNFCBatchData');
-     return map;
+  Future<HashMap> getNFCBatchData() async {
+    Future<HashMap> map = await _methodChannel.invokeMethod('getNFCBatchData');
+    return map;
   }
 
-  void sendPin(String s) async{
+  void sendPin(String s) async {
     Map<String, String> params = Map<String, String>();
     params['pinContent'] = s;
-    await _methodChannel.invokeMethod('sendPin',params);
-
+    await _methodChannel.invokeMethod('sendPin', params);
   }
 
-  void selectEmvApp(int i) async{
+  void selectEmvApp(int i) async {
     Map<String, int> params = Map<String, int>();
     params['position'] = i;
-    await _methodChannel.invokeMethod('selectEmvApp',params);
-
+    await _methodChannel.invokeMethod('selectEmvApp', params);
   }
 
-  void sendOnlineProcessResult(String str)  async{
+  void sendOnlineProcessResult(String str) async {
     Map<String, String> params = Map<String, String>();
     params['onlineProcessResult'] = str;
-    await _methodChannel.invokeMethod('sendOnlineProcessResult',params);
-
+    await _methodChannel.invokeMethod('sendOnlineProcessResult', params);
   }
 
-  void stopScanQPos2Mode() async{
+  void stopScanQPos2Mode() async {
     await _methodChannel.invokeMethod('stopScanQPos2Mode');
   }
 
-  void scanQPos2Mode(int i)  async{
+  void scanQPos2Mode(int i) async {
     Map<String, int> params = Map<String, int>();
     params['scanTime'] = i;
-    await _methodChannel.invokeMethod('scanQPos2Mode',params);
-
+    await _methodChannel.invokeMethod('scanQPos2Mode', params);
   }
 
-  void updateEmvConfig(String emvapp, String emvcapk) async{
+  void updateEmvConfig(String emvapp, String emvcapk) async {
     Map<String, String> params = Map<String, String>();
     params['emvApp'] = emvapp;
     params['emvCapk'] = emvcapk;
-    await _methodChannel.invokeMethod('updateEmvConfig',params);
-
+    await _methodChannel.invokeMethod('updateEmvConfig', params);
   }
 
-  Future<void> updatePosFirmware(String upContent, String mAddress) async{
+  Future<void> updatePosFirmware(String upContent, String mAddress) async {
     Map<String, String> params = Map<String, String>();
     params['upContent'] = upContent;
     params['address'] = mAddress;
-   return _methodChannel.invokeMethod('updatePosFirmware',params);
-
+    return _methodChannel.invokeMethod('updatePosFirmware', params);
   }
 
-  void doUpdateIPEKOperation(int ipekgroup,
-      String trackksn, String trackipek, String trackipekCheckvalue,
-      String emvksn, String emvipek, String emvipekCheckvalue,
-      String pinksn, String pinipek, String pinipekCheckvalue)async{
+  void doUpdateIPEKOperation(
+      int ipekgroup,
+      String trackksn,
+      String trackipek,
+      String trackipekCheckvalue,
+      String emvksn,
+      String emvipek,
+      String emvipekCheckvalue,
+      String pinksn,
+      String pinipek,
+      String pinipekCheckvalue) async {
     Map<String, String> params = Map<String, String>();
     StringBuffer index = StringBuffer();
     index.write(ipekgroup);
@@ -206,44 +201,43 @@ class FlutterPluginQpos {
     params['pinksn'] = pinksn;
     params['pinipek'] = pinipek;
     params['pinipekCheckvalue'] = pinipekCheckvalue;
-    await _methodChannel.invokeMethod('doUpdateIPEKOperation',params);
-
+    await _methodChannel.invokeMethod('doUpdateIPEKOperation', params);
   }
 
-  void setMasterKey(String key, String checkValue, int keyIndex) async{
+  void setMasterKey(String key, String checkValue, int keyIndex) async {
     Map<String, String> params = Map<String, String>();
     params['key'] = key;
     params['checkValue'] = checkValue;
     StringBuffer index = StringBuffer();
     index.write(keyIndex);
     params['keyIndex'] = index.toString();
-    await _methodChannel.invokeMethod('setMasterKey',params);
-
+    await _methodChannel.invokeMethod('setMasterKey', params);
   }
 
-  Future<int> getUpdateProgress() async{
-     int process = await _methodChannel.invokeMethod('getUpdateProgress');
+  Future<int> getUpdateProgress() async {
+    int process = await _methodChannel.invokeMethod('getUpdateProgress');
     return process;
-
   }
 
-  void openUart(String s) async{
+  void openUart(String s) async {
     Map<String, String> params = Map<String, String>();
     params['path'] = s;
-    await _methodChannel.invokeMethod('openUart',params);
+    await _methodChannel.invokeMethod('openUart', params);
   }
 
-  void pinMapSync(value) async{
+  void pinMapSync(value) async {
     Map<String, String> params = Map<String, String>();
     params['value'] = value;
-    await _methodChannel.invokeMethod('pinMapSync',params);
+    await _methodChannel.invokeMethod('pinMapSync', params);
   }
 
-
-
-
-
-
+  Future<String> generateIPEK(String bdk, String ksn) async {
+    Map<String, String> params = Map<String, String>();
+    params['ksn'] = ksn;
+    params['bdk'] = bdk;
+    final String result = await _methodChannel.invokeMethod('generateIPEK');
+    return result;
+  }
 }
 
 //onQposInfoResult(java.util.Hashtable);
@@ -354,4 +348,3 @@ class FlutterPluginQpos {
 //onGetSleepModeTime(java.lang.String);
 //
 //Process finished with exit code 0
-
