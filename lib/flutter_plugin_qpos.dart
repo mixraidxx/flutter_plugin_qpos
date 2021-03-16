@@ -235,7 +235,8 @@ class FlutterPluginQpos {
     Map<String, String> params = Map<String, String>();
     params['ksn'] = ksn;
     params['bdk'] = bdk;
-    final String result = await _methodChannel.invokeMethod('generateIPEK');
+    final String result =
+        await _methodChannel.invokeMethod('generateIPEK', params);
     return result;
   }
 }

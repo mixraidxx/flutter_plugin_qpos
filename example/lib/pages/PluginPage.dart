@@ -231,6 +231,9 @@ class _MyAppState extends State<PluginPage> {
               textSection,
               btnMenuSection,
               btnMenuDeviceInfoSection,
+              ElevatedButton(onPressed: () {
+                _flutterPluginQpos.generateIPEK("0123456789ABCDEFFEDCBA9876543210", "00000332100300E00001");
+              }, child: Text("generate IPEK")),
               getListSection(),
               textResultSection,
 
