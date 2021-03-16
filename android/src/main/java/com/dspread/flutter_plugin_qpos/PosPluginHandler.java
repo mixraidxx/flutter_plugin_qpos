@@ -16,6 +16,7 @@ import java.util.Map;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodChannel.Result;
 
+import static com.dspread.demoui.utils.DUKPK2009_CBC.GenerateCheckValue;
 import static com.dspread.demoui.utils.DUKPK2009_CBC.GenerateIPEK;
 import static com.dspread.demoui.utils.DUKPK2009_CBC.parseByte2HexStr;
 import static com.dspread.demoui.utils.DUKPK2009_CBC.parseHexStr2Byte;
@@ -275,5 +276,12 @@ public class PosPluginHandler {
         byte[] ipek = GenerateIPEK(byte_ksn,byte_bdk);
         String ipekStr = parseByte2HexStr(ipek);
         return ipekStr;
+    }
+
+    public static String generateCheckValue(String Key) {
+        byte[] key = parseHexStr2Byte(Key);
+        byte[] check = GenerateCheckValue(key);
+        String checkStr = parseByte2HexStr(check);
+        return checkStr.substring(0,6);
     }
 }

@@ -101,7 +101,6 @@ class _MyAppState extends State<PluginPage> {
     Widget buttonSection = new Container(
       child: new Row(
         children: [
-
           RaisedButton(
             onPressed: () async {
               setState(() {
@@ -130,13 +129,10 @@ class _MyAppState extends State<PluginPage> {
 
     Widget btnMenuSection = new PopupMenuButton<String>(
         initialValue: "",
-        child: RaisedButton(
-            child: new Text("update button")
-        ),
+        child: RaisedButton(child: new Text("update button")),
         onSelected: (String string) {
           print(string.toString());
-          onUpdateButtonSelected(string,context);
-
+          onUpdateButtonSelected(string, context);
         },
         itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
               PopupMenuItem(
@@ -159,33 +155,29 @@ class _MyAppState extends State<PluginPage> {
 
     Widget btnMenuDeviceInfoSection = new PopupMenuButton<String>(
         initialValue: "",
-        child: RaisedButton(
-            child: new Text("device_info button")
-        ),
+        child: RaisedButton(child: new Text("device_info button")),
         onSelected: (String string) {
           print(string.toString());
-          onDeviceInfoButtonSelected(string,context);
-
+          onDeviceInfoButtonSelected(string, context);
         },
         itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
-          PopupMenuItem(
-            child: Text("get Device Id"),
-            value: "0",
-          ),
-          PopupMenuItem(
-            child: Text("get Device Info"),
-            value: "1",
-          ),
-          PopupMenuItem(
-            child: Text("get Device update Key CheckValue"),
-            value: "2",
-          ),
-          PopupMenuItem(
-            child: Text("get Device Key CheckValue"),
-            value: "3",
-          )
-        ]);
-
+              PopupMenuItem(
+                child: Text("get Device Id"),
+                value: "0",
+              ),
+              PopupMenuItem(
+                child: Text("get Device Info"),
+                value: "1",
+              ),
+              PopupMenuItem(
+                child: Text("get Device update Key CheckValue"),
+                value: "2",
+              ),
+              PopupMenuItem(
+                child: Text("get Device Key CheckValue"),
+                value: "3",
+              )
+            ]);
 
     Widget textSection = new Container(
       child: new Column(
@@ -220,7 +212,6 @@ class _MyAppState extends State<PluginPage> {
           ),
           body: new ListView(
             children: [
-
               RaisedButton(
                 onPressed: () async {
                   openUart();
@@ -231,9 +222,22 @@ class _MyAppState extends State<PluginPage> {
               textSection,
               btnMenuSection,
               btnMenuDeviceInfoSection,
-              ElevatedButton(onPressed: () {
-                _flutterPluginQpos.generateIPEK("0123456789ABCDEFFEDCBA9876543210", "00000332100300E00001");
-              }, child: Text("generate IPEK")),
+              ElevatedButton(
+                  onPressed: () {
+                    _flutterPluginQpos.generateIPEK(
+                        "0123456789ABCDEFFEDCBA9876543210",
+                        "00000332100300E00001");
+                  },
+                  child: Text("generate IPEK")),
+              ElevatedButton(
+                  onPressed: () {
+                    _flutterPluginQpos
+                        .generateCheckValue("0123456789ABCDEFFEDCBA9876543210")
+                        .then((value) {
+                      print(value);
+                    });
+                  },
+                  child: Text("generate Check value")),
               getListSection(),
               textResultSection,
 
@@ -347,7 +351,7 @@ class _MyAppState extends State<PluginPage> {
         _flutterPluginQpos.sendPin("1111");
         break;
       case 'onQposRequestPinResult':
-        _showKeyboard(context,parameters);
+        _showKeyboard(context, parameters);
         break;
       case 'onGetPosComm':
         break;
@@ -373,12 +377,14 @@ class _MyAppState extends State<PluginPage> {
           _flutterPluginQpos.doEmvApp("START");
         }
 
-        if (Utils.equals(paras[0], "NFC_ONLINE") || Utils.equals(paras[0], "NFC_OFFLINE")) {
-          Future<HashMap<String, String>> map = _flutterPluginQpos.getNFCBatchData();
+        if (Utils.equals(paras[0], "NFC_ONLINE") ||
+            Utils.equals(paras[0], "NFC_OFFLINE")) {
+          Future<HashMap<String, String>> map =
+              _flutterPluginQpos.getNFCBatchData();
           setState(() {
             display = map.toString();
           });
-        }else if(Utils.equals(paras[0], "MCR")){
+        } else if (Utils.equals(paras[0], "MCR")) {
           setState(() {
             display = paras[1];
           });
@@ -479,12 +485,13 @@ class _MyAppState extends State<PluginPage> {
         print('onUpdatePosFirmwareProcessChanged${parameters}');
 
         print('onUpdatePosFirmwareProcessChanged${double.parse(parameters)}');
-        if(pr != null && pr.isShowing()){
+        if (pr != null && pr.isShowing()) {
           pr.update(
             progress: double.parse(parameters),
             message: "Please wait...",
             progressWidget: Container(
-                padding: EdgeInsets.all(8.0), child: CircularProgressIndicator()),
+                padding: EdgeInsets.all(8.0),
+                child: CircularProgressIndicator()),
             maxProgress: 100.0,
           );
         }
@@ -671,13 +678,12 @@ class _MyAppState extends State<PluginPage> {
     }
   }
 
-
-
   operatUpdateProcess(ByteData value, BuildContext context) async {
-    if(pr != null && pr.isShowing())
-      pr.hide();
+    if (pr != null && pr.isShowing()) pr.hide();
     pr = new ProgressDialog(context, type: ProgressDialogType.Download);
-    pr.style(message: 'Update Firmware...',);
+    pr.style(
+      message: 'Update Firmware...',
+    );
     await pr.show();
     Uint8List list = value.buffer.asUint8List(0);
     var upContent = Utils.Uint8ListToHexStr(list);
@@ -691,7 +697,7 @@ class _MyAppState extends State<PluginPage> {
         _visibility = true;
       });
 
-      operatUpdateProcess(value,context);
+      operatUpdateProcess(value, context);
 
       print("点击事件结束");
     });
@@ -701,7 +707,7 @@ class _MyAppState extends State<PluginPage> {
     switch (string) {
       case "0":
         Future<ByteData> future =
-        DefaultAssetBundle.of(context).load('configs/emv_capk.bin');
+            DefaultAssetBundle.of(context).load('configs/emv_capk.bin');
         DefaultAssetBundle.of(context)
             .load('configs/emv_app.bin')
             .then((value) {
@@ -744,7 +750,7 @@ class _MyAppState extends State<PluginPage> {
   void onDeviceInfoButtonSelected(String string, BuildContext context) {
     switch (string) {
       case "0":
-            _flutterPluginQpos.getQposId();
+        _flutterPluginQpos.getQposId();
         break;
       case "1":
         _flutterPluginQpos.getQposInfo();
@@ -754,31 +760,31 @@ class _MyAppState extends State<PluginPage> {
 
         break;
       case "3":
-        _flutterPluginQpos.getKeyCheckValue(0,'DUKPT_MKSK_ALLTYPE');
+        _flutterPluginQpos.getKeyCheckValue(0, 'DUKPT_MKSK_ALLTYPE');
 
         break;
     }
   }
+
   void _showKeyboard(BuildContext context, String parameters) {
-    print("_showKeyboard:"+parameters);
+    print("_showKeyboard:" + parameters);
 
     List<String> keyBoardList = new List();
     var paras = parameters.split("||");
     String keyMap = paras[0];
 
-    for(int i = 0; i< keyMap.length;i+=2 ){
-      String keyValue = keyMap.substring(i,i+2);
-      print("POS"+keyValue);
-      keyBoardList.add(int.parse(keyValue,radix: 16).toString());
+    for (int i = 0; i < keyMap.length; i += 2) {
+      String keyValue = keyMap.substring(i, i + 2);
+      print("POS" + keyValue);
+      keyBoardList.add(int.parse(keyValue, radix: 16).toString());
     }
 
-    for(int i=0;i<keyBoardList.length;i++){
-      if(keyBoardList[i] == "13"){
+    for (int i = 0; i < keyBoardList.length; i++) {
+      if (keyBoardList[i] == "13") {
         keyBoardList[i] = "cancel";
-      }else if(keyBoardList[i] == "14"){
+      } else if (keyBoardList[i] == "14") {
         keyBoardList[i] = "del";
-      }
-      else if(keyBoardList[i] == "15"){
+      } else if (keyBoardList[i] == "15") {
         keyBoardList[i] = "confirm";
       }
     }
@@ -791,8 +797,8 @@ class _MyAppState extends State<PluginPage> {
         return CustomKeyboard(
           pwdField: numPinField,
           initEvent: (value) {
-            print("pinMapSync:"+value);
-             _flutterPluginQpos.pinMapSync(value);
+            print("pinMapSync:" + value);
+            _flutterPluginQpos.pinMapSync(value);
           },
           callback: (keyEvent) {
             if (keyEvent.isClose()) {
@@ -811,7 +817,4 @@ class _MyAppState extends State<PluginPage> {
       },
     );
   }
-
 }
-
-

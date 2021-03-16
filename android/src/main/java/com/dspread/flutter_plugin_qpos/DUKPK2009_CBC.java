@@ -161,6 +161,38 @@ public class DUKPK2009_CBC {
         return result;
     }
 
+    public static byte[] GenerateCheckValue(byte[] key) {
+        byte[] result;
+        byte[] temp, temp2, keyTemp;
+        byte[] data = new byte[16];
+
+        result = new byte[16];
+        temp = new byte[8];
+        keyTemp = new byte[16];
+
+//        Array.Copy(bdk, keyTemp, 16);
+        System.arraycopy(key, 0, keyTemp, 0, 16);   //Array.Copy(bdk, keyTemp, 16);
+//        Array.Copy(ksn, temp, 8);
+        System.arraycopy(data, 0, temp, 0, 8);    //Array.Copy(ksn, temp, 8);
+        temp[7] &= 0xE0;
+//        TDES_Enc(temp, keyTemp, out temp2);
+        temp2 = TriDesEncryption(keyTemp, temp);    //TDES_Enc(temp, keyTemp, out temp2);temp
+//        Array.Copy(temp2, result, 8);
+        System.arraycopy(temp2, 0, result, 0, 8);   //Array.Copy(temp2, result, 8);
+        keyTemp[0] ^= 0xC0;
+        keyTemp[1] ^= 0xC0;
+        keyTemp[2] ^= 0xC0;
+        keyTemp[3] ^= 0xC0;
+        keyTemp[8] ^= 0xC0;
+        keyTemp[9] ^= 0xC0;
+        keyTemp[10] ^= 0xC0;
+        keyTemp[11] ^= 0xC0;
+//        TDES_Enc(temp, keyTemp, out temp2);
+        temp2 = TriDesEncryption(keyTemp, temp);    //TDES_Enc(temp, keyTemp, out temp2);
+//        Array.Copy(temp2, 0, result, 8, 8);
+        System.arraycopy(temp2, 0, result, 8, 8);  //Array.Copy(temp2, 0, result, 8, 8);
+        return result;
+    }
 
     public static byte[] GetDUKPTKey(byte[] ksn, byte[] ipek) {
 //    	System.out.println("ksn===" + parseByte2HexStr(ksn));

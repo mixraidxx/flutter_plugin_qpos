@@ -239,6 +239,14 @@ class FlutterPluginQpos {
         await _methodChannel.invokeMethod('generateIPEK', params);
     return result;
   }
+
+  Future<String> generateCheckValue(String key) async {
+    Map<String, String> params = Map<String, String>();
+    params['key'] = key;
+    final String result =
+        await _methodChannel.invokeMethod("generateCheckValue", params);
+    return result;
+  }
 }
 
 //onQposInfoResult(java.util.Hashtable);

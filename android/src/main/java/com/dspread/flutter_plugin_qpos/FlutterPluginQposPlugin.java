@@ -263,6 +263,9 @@ public class FlutterPluginQposPlugin implements FlutterPlugin, MethodCallHandler
             String ksn = call.argument("ksn");
             String bdk = call.argument("bdk");
             result.success(PosPluginHandler.generateIPEK(ksn,bdk));
+        } else if (call.method.equals("generateCheckValue")){
+            String key = call.argument("key");
+            result.success(PosPluginHandler.generateCheckValue(key));
         }
         else {
             result.notImplemented();
