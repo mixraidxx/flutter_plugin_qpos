@@ -258,7 +258,6 @@ class FlutterPluginQpos {
   }
 
   void generateTransportKey() async {
-    print("Flutter generate Transport key");
     await _methodChannel.invokeMethod("generateTransportKey");
   }
 }

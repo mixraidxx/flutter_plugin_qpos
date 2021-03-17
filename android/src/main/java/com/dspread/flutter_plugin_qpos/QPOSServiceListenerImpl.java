@@ -1318,7 +1318,11 @@ public class QPOSServiceListenerImpl extends CQPOSService   {
         PosPluginHandler.mEvents.success(JSONObject.toJSONString(map));
     }
 
-
-
+    @Override
+    public void onRequestGenerateTransportKey(Hashtable result) {
+        super.onRequestGenerateTransportKey(result);
+        TRACE.d("onRequestGenerateTransportKey");
+        TRACE.d(result.toString());
+    }
 }
 

@@ -248,6 +248,11 @@ class _MyAppState extends State<PluginPage> {
                     });
                   },
                   child: Text("Triple DES")),
+              ElevatedButton(
+                  onPressed: () {
+                    _flutterPluginQpos.generateTransportKey();
+                  },
+                  child: Text("Genera transport Key")),
               getListSection(),
               textResultSection,
 
