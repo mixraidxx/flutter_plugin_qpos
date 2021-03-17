@@ -256,6 +256,11 @@ class FlutterPluginQpos {
         await _methodChannel.invokeMethod("tripleDesEncryption", params);
     return result;
   }
+
+  void generateTransportKey() async {
+    print("Flutter generate Transport key");
+    await _methodChannel.invokeMethod("generateTransportKey");
+  }
 }
 
 //onQposInfoResult(java.util.Hashtable);

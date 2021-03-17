@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dspread.xpos.QPOSService;
@@ -292,5 +293,14 @@ public class PosPluginHandler {
         byte[] encryp = TriDesEncryption(byte_key, byte_data);
         String encrypStr = parseByte2HexStr(encryp);
         return encrypStr;
+    }
+
+    public static void generateTransportKey() {
+        Log.e("JAVA", "Generate transport key");
+        mPos.generateTransportKey(20);
+    }
+
+    public static void updateIPEKByTransportKey(){
+        //mPos.updateIPEKByTransportKey();
     }
 }
