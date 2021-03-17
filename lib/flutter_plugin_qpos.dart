@@ -247,6 +247,15 @@ class FlutterPluginQpos {
         await _methodChannel.invokeMethod("generateCheckValue", params);
     return result;
   }
+
+  Future<String> tripleDesEncryption(String key, String data) async {
+    Map<String, String> params = Map<String, String>();
+    params['key'] = key;
+    params['data'] = data;
+    final String result =
+        await _methodChannel.invokeMethod("tripleDesEncryption", params);
+    return result;
+  }
 }
 
 //onQposInfoResult(java.util.Hashtable);

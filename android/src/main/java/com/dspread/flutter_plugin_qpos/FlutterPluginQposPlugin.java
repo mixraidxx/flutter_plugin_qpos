@@ -266,6 +266,10 @@ public class FlutterPluginQposPlugin implements FlutterPlugin, MethodCallHandler
         } else if (call.method.equals("generateCheckValue")){
             String key = call.argument("key");
             result.success(PosPluginHandler.generateCheckValue(key));
+        } else if (call.method.equals("tripleDesEncryption")) {
+            String key = call.argument("key");
+            String data = call.argument("data");
+            result.success(PosPluginHandler.tripleDesEncryption(key,data));
         }
         else {
             result.notImplemented();

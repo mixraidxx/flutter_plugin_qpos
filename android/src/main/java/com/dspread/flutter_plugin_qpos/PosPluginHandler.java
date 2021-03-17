@@ -18,6 +18,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 
 import static com.dspread.demoui.utils.DUKPK2009_CBC.GenerateCheckValue;
 import static com.dspread.demoui.utils.DUKPK2009_CBC.GenerateIPEK;
+import static com.dspread.demoui.utils.DUKPK2009_CBC.TriDesEncryption;
 import static com.dspread.demoui.utils.DUKPK2009_CBC.parseByte2HexStr;
 import static com.dspread.demoui.utils.DUKPK2009_CBC.parseHexStr2Byte;
 
@@ -283,5 +284,13 @@ public class PosPluginHandler {
         byte[] check = GenerateCheckValue(key);
         String checkStr = parseByte2HexStr(check);
         return checkStr.substring(0,6);
+    }
+
+    public static String tripleDesEncryption(String Key, String data){
+        byte[] byte_key = parseHexStr2Byte(Key);
+        byte[] byte_data = parseHexStr2Byte(data);
+        byte[] encryp = TriDesEncryption(byte_key, byte_data);
+        String encrypStr = parseByte2HexStr(encryp);
+        return encrypStr;
     }
 }

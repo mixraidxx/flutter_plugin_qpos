@@ -238,6 +238,16 @@ class _MyAppState extends State<PluginPage> {
                     });
                   },
                   child: Text("generate Check value")),
+              ElevatedButton(
+                  onPressed: () {
+                    _flutterPluginQpos
+                        .tripleDesEncryption("0123456789ABCDEFFEDCBA9876543210",
+                            "B579E9C92E84D7BF129DD468290D5FD8")
+                        .then((value) {
+                      print("tripledes: $value");
+                    });
+                  },
+                  child: Text("Triple DES")),
               getListSection(),
               textResultSection,
 
