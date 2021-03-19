@@ -1322,7 +1322,12 @@ public class QPOSServiceListenerImpl extends CQPOSService   {
     public void onRequestGenerateTransportKey(Hashtable result) {
         super.onRequestGenerateTransportKey(result);
         TRACE.d("onRequestGenerateTransportKey");
-        TRACE.d(result.toString());
+        Map map = new HashMap();
+        map.put("method","onRequestGenerateTransportKey");
+        StringBuffer parameters = new StringBuffer();
+        parameters.append(result);
+        map.put("parameters",parameters.toString());
+        PosPluginHandler.mEvents.success(JSONObject.toJSONString(map));
     }
 }
 

@@ -82,6 +82,8 @@ public class PosPluginHandler {
         mPos.scanQPos2Mode(mContext, time);
     }
 
+    public static void stopQPos2Mode() { mPos.stopScanQPos2Mode(); }
+
     public static void startScanQposBLE(int time) {
         mPos.startScanQposBLE(time);
     }
