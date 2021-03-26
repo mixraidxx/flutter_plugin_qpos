@@ -626,6 +626,10 @@ class _MyAppState extends State<PluginPage> {
           numPinField = int.parse(parameters);
         });
         break;
+      case 'onRequestGenerateTransportKey':
+        print(method);
+        print(parameters);
+        break;
       default:
         throw ArgumentError('error');
     }
