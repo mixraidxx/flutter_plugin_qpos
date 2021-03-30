@@ -2,12 +2,14 @@ package com.dspread.flutter_plugin_qpos;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dspread.xpos.CQPOSService;
 import com.dspread.xpos.QPOSService;
 import com.dspread.xpos.CQPOSService;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ public class QPOSServiceListenerImpl extends CQPOSService   {
 
 
     private static final String Delimiter = "||";
+    Gson gson = new Gson();
 
     @Override
     public void onRequestWaitingUser() {//等待卡片
@@ -45,11 +48,12 @@ public class QPOSServiceListenerImpl extends CQPOSService   {
         Map map = new HashMap();
         map.put("method","onDoTradeResult");
         StringBuffer parameters = new StringBuffer();
-        if (decodeData != null)
-        parameters.append(result.toString().concat(Delimiter).concat(decodeData.toString()));
-        else
+        if (decodeData != null){
+            String finalJson =  gson.toJson(decodeData);
+            parameters.append(result.toString().concat(Delimiter).concat(finalJson));
+        } else {
             parameters.append(result.toString());
-
+        }
         map.put("parameters",parameters.toString());
         PosPluginHandler.mEvents.success(JSONObject.toJSONString(map));
     }

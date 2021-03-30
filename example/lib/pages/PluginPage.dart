@@ -210,52 +210,54 @@ class _MyAppState extends State<PluginPage> {
           appBar: AppBar(
             title: const Text('plugin page'),
           ),
-          body: new ListView(
-            children: [
-              RaisedButton(
-                onPressed: () async {
-                  openUart();
-                },
-                child: Text("open uart"),
-              ),
-              buttonSection,
-              textSection,
-              btnMenuSection,
-              btnMenuDeviceInfoSection,
-              ElevatedButton(
-                  onPressed: () {
-                    _flutterPluginQpos.generateIPEK(
-                        "0123456789ABCDEFFEDCBA9876543210",
-                        "00000332100300E00001");
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                RaisedButton(
+                  onPressed: () async {
+                    openUart();
                   },
-                  child: Text("generate IPEK")),
-              ElevatedButton(
-                  onPressed: () {
-                    _flutterPluginQpos
-                        .generateCheckValue("0123456789ABCDEFFEDCBA9876543210")
-                        .then((value) {
-                      print(value);
-                    });
-                  },
-                  child: Text("generate Check value")),
-              ElevatedButton(
-                  onPressed: () {
-                    _flutterPluginQpos.generateTransportKey();
-                    // _flutterPluginQpos
-                    //     .tripleDesEncryption("0123456789ABCDEFFEDCBA9876543210",
-                    //         "B579E9C92E84D7BF129DD468290D5FD8")
-                    //     .then((value) {
-                    //   print("tripledes: $value");
-                    // });
-                  },
-                  child: Text("Genera transport key")),
+                  child: Text("open uart"),
+                ),
+                buttonSection,
+                textSection,
+                btnMenuSection,
+                btnMenuDeviceInfoSection,
+                ElevatedButton(
+                    onPressed: () {
+                      _flutterPluginQpos.generateIPEK(
+                          "0123456789ABCDEFFEDCBA9876543210",
+                          "00000332100300E00001");
+                    },
+                    child: Text("generate IPEK")),
+                ElevatedButton(
+                    onPressed: () {
+                      _flutterPluginQpos
+                          .generateCheckValue(
+                              "0123456789ABCDEFFEDCBA9876543210")
+                          .then((value) {
+                        print(value);
+                      });
+                    },
+                    child: Text("generate Check value")),
+                ElevatedButton(
+                    onPressed: () {
+                      _flutterPluginQpos.generateTransportKey();
+                      // _flutterPluginQpos
+                      //     .tripleDesEncryption("0123456789ABCDEFFEDCBA9876543210",
+                      //         "B579E9C92E84D7BF129DD468290D5FD8")
+                      //     .then((value) {
+                      //   print("tripledes: $value");
+                      // });
+                    },
+                    child: Text("Genera transport key")),
 
-              getListSection(),
-              textResultSection,
+                getListSection(),
+                textResultSection,
 
 //              getupdateSection()
-            ],
-            padding: EdgeInsets.all(2.0),
+              ],
+            ),
           )),
     );
   }
