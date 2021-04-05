@@ -260,6 +260,27 @@ class FlutterPluginQpos {
   void generateTransportKey() async {
     await _methodChannel.invokeMethod("generateTransportKey");
   }
+
+  void updateIPEKByTransportKey(String ksn, String ipek, String cvk) async {
+    Map<String, String> params = Map<String, String>();
+    params['ksn'] = ksn;
+    params['ipek'] = ipek;
+    params['cvk'] = cvk;
+    await _methodChannel.invokeMethod("updateIPEKByTransportKey");
+  }
+
+  Future<bool> sendCvv(String cvv) async {
+    Map<String, String> params = Map<String, String>();
+    params['cvv'] = cvv;
+    final bool result = await _methodChannel.invokeMethod("sendCvv", params);
+    return result;
+  }
+
+  Future<String> getEncryptedDataBlock() async {
+    final String result =
+        await _methodChannel.invokeMethod("getEncryptedDataBlock");
+    return result;
+  }
 }
 
 //onQposInfoResult(java.util.Hashtable);

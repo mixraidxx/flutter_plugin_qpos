@@ -403,6 +403,7 @@ class _MyAppState extends State<PluginPage> {
             display = paras[1];
           });
         }
+        requestSendCVV();
         break;
       case 'onQposIdResult':
         break;
@@ -834,5 +835,16 @@ class _MyAppState extends State<PluginPage> {
         );
       },
     );
+  }
+
+  void requestSendCVV() async {
+    final result = await _flutterPluginQpos.sendCvv("000");
+    if (result) {
+      print("Send cvv success");
+      final data = await _flutterPluginQpos.getEncryptedDataBlock();
+      print(data);
+    } else {
+      print("Send cvv fail");
+    }
   }
 }

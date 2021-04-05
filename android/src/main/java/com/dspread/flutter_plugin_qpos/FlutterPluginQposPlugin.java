@@ -274,6 +274,16 @@ public class FlutterPluginQposPlugin implements FlutterPlugin, MethodCallHandler
             PosPluginHandler.generateTransportKey();
         } else if(call.method.equals("stopScanQPos2Mode")){
             PosPluginHandler.stopQPos2Mode();
+        } else if(call.method.equals("sendCvv")){
+            String cvv = call.argument("cvv");
+           result.success(PosPluginHandler.sendCVV(cvv));
+        } else if(call.method.equals("getEncryptedDataBlock")){
+            result.success(PosPluginHandler.getEncryptedDataBlock());
+        } else if (call.method.equals("updateIPEKByTransportKey")) {
+            String ksn = call.argument("ksn");
+            String ipek = call.argument("ipek");
+            String cvk = call.argument("cvk");
+            PosPluginHandler.updateIPEKByTransportKey(ksn,ipek,cvk);
         }
         else {
             result.notImplemented();

@@ -10,6 +10,8 @@ import com.dspread.xpos.CQPOSService;
 import com.dspread.xpos.QPOSService;
 import com.dspread.xpos.CQPOSService;
 import com.google.gson.Gson;
+import com.payneteasy.tlv.BerTlv;
+import com.payneteasy.tlv.BerTlvParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -163,8 +165,10 @@ public class QPOSServiceListenerImpl extends CQPOSService   {
     @Override
     public void onRequestOnlineProcess(final String tlv) {
         TRACE.d("onRequestOnlineProcess" + tlv);
+
         Map map = new HashMap();
         map.put("method","onRequestOnlineProcess");
+        BerTlvParser parser = new BerTlvParser();
         StringBuffer parameters = new StringBuffer();
         parameters.append(tlv);
         map.put("parameters",parameters.toString());

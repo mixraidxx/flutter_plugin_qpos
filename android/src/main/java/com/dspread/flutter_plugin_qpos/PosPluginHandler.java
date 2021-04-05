@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dspread.xpos.QPOSService;
+import com.google.gson.Gson;
 
 
 import java.util.HashMap;
@@ -30,6 +31,7 @@ public class PosPluginHandler {
     private static Context mContext;
     private static int mMode = QPOSService.CommunicationMode.BLUETOOTH.ordinal();
     private static QPOSServiceListenerImpl listener;
+    private static Gson gson = new Gson();
     static EventChannel.EventSink mEvents;
     private static Handler mHandler = new Handler() {
         @Override
@@ -298,11 +300,18 @@ public class PosPluginHandler {
     }
 
     public static void generateTransportKey() {
-        Log.e("JAVA", "Generate transport key");
         mPos.generateTransportKey(20);
     }
 
-    public static void updateIPEKByTransportKey(){
-        //mPos.updateIPEKByTransportKey();
+    public static void updateIPEKByTransportKey(String ksn,String ipek, String cvk){
+        mPos.updateIPEKByTransportKey("00",ksn, ipek,cvk,ksn,ipek,cvk,ksn,ipek,cvk);
+    }
+
+    public static boolean sendCVV(String cvv) {
+      return  mPos.sendCVV(cvv);
+    }
+
+    public static String getEncryptedDataBlock() {
+       return gson.toJson(mPos.getEncryptedDataBlock(0));
     }
 }
