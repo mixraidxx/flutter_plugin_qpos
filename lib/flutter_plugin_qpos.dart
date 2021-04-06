@@ -281,6 +281,13 @@ class FlutterPluginQpos {
         await _methodChannel.invokeMethod("getEncryptedDataBlock");
     return result;
   }
+
+  Future<String> tlvDecoder(String tlv) async {
+    Map<String, String> params = Map<String, String>();
+    params['tlv'] = tlv;
+    final String result = await _methodChannel.invokeMethod("parseTLV", params);
+    return result;
+  }
 }
 
 //onQposInfoResult(java.util.Hashtable);

@@ -284,6 +284,9 @@ public class FlutterPluginQposPlugin implements FlutterPlugin, MethodCallHandler
             String ipek = call.argument("ipek");
             String cvk = call.argument("cvk");
             PosPluginHandler.updateIPEKByTransportKey(ksn,ipek,cvk);
+        } else if (call.method.equals("parseTLV")) {
+            String tlv = call.argument("tlv");
+            result.success(PosPluginHandler.tlvDecoder(tlv));
         }
         else {
             result.notImplemented();

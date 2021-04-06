@@ -1,5 +1,8 @@
 package com.dspread.flutter_plugin_qpos;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Utils {
 
 
@@ -313,6 +316,8 @@ public class Utils {
 		
 		return maxstrlen;
 	}
+
+
 }
 
 

@@ -11,6 +11,7 @@ import com.dspread.xpos.QPOSService;
 import com.google.gson.Gson;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -313,5 +314,12 @@ public class PosPluginHandler {
 
     public static String getEncryptedDataBlock() {
        return gson.toJson(mPos.getEncryptedDataBlock(0));
+    }
+
+    public static String tlvDecoder(String tlv){
+        EMVParser _parser = new EMVParser();
+       ArrayList<Tag> map = _parser.decodeTLV(tlv);
+       String result = gson.toJson(map);
+       return result;
     }
 }
