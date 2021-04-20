@@ -288,6 +288,10 @@ class FlutterPluginQpos {
     final String result = await _methodChannel.invokeMethod("parseTLV", params);
     return result;
   }
+
+  void cancelTrade() async {
+    await _methodChannel.invokeMethod("cancelTrade");
+  }
 }
 
 //onQposInfoResult(java.util.Hashtable);
