@@ -287,6 +287,9 @@ public class FlutterPluginQposPlugin implements FlutterPlugin, MethodCallHandler
         } else if (call.method.equals("parseTLV")) {
             String tlv = call.argument("tlv");
             result.success(PosPluginHandler.tlvDecoder(tlv));
+        } else if (call.method.equals("cancelTrade")) {
+            PosPluginHandler.cancelTrade();
+            result.success(true);
         }
         else {
             result.notImplemented();

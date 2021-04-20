@@ -322,4 +322,8 @@ public class PosPluginHandler {
        String result = gson.toJson(map);
        return result;
     }
+
+    public static void cancelTrade() {
+        mPos.cancelTrade();
+    }
 }
