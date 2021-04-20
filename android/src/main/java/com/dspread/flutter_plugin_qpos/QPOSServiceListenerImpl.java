@@ -63,9 +63,8 @@ public class QPOSServiceListenerImpl extends CQPOSService   {
         TRACE.d("onQposInfoResult" + posInfoData.toString());
         Map map = new HashMap();
         map.put("method","onQposInfoResult");
-        StringBuffer parameters = new StringBuffer();
-        parameters.append(posInfoData.toString());
-        map.put("parameters",parameters.toString());
+        String finalJson = gson.toJson(posInfoData);
+        map.put("parameters",finalJson);
         PosPluginHandler.mEvents.success(JSONObject.toJSONString(map));
     }
 
