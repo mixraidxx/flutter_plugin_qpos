@@ -292,6 +292,10 @@ class FlutterPluginQpos {
   void cancelTrade() async {
     await _methodChannel.invokeMethod("cancelTrade");
   }
+
+  void updateRSA() async {
+    await _methodChannel.invokeMethod("updateRSA");
+  }
 }
 
 //onQposInfoResult(java.util.Hashtable);

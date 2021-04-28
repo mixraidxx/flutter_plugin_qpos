@@ -11,11 +11,16 @@ import com.dspread.xpos.QPOSService;
 import com.google.gson.Gson;
 
 
+import java.io.InputStream;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+import Decoder.BASE64Decoder;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodChannel.Result;
 
@@ -325,5 +330,37 @@ public class PosPluginHandler {
 
     public static void cancelTrade() {
         mPos.cancelTrade();
+    }
+
+    public static void updateRsa(){
+        try {
+            InputStream open = mContext.getAssets().open("rsa_public_2048.pem");
+            String publicKeyStr = QPOSUtil.readRSAStream(open);
+            TRACE.d(publicKeyStr);
+            BASE64Decoder base64Decoder = new BASE64Decoder();
+            byte[] buffer = base64Decoder.decodeBuffer(publicKeyStr);
+            String s = QPOSUtil.byteArray2Hex(buffer);
+            TRACE.d("POS " + s);
+            TRACE.d("Cargar nueva llave 2048");
+            TRACE.d("Cargar nueva llave");
+//                        InputStream priopen = getAssets().open("priva.pem");
+//                        String priKeyStr = QPOSUtil.readRSAStream(priopen);
+//                        byte[] pribuffer = base64Decoder.decodeBuffer(priKeyStr);
+//                        s = QPOSUtil.byteArray2Hex(pribuffer);
+//                        TRACE.d("POS" + s);
+
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(buffer);
+            PublicKey publicKey = keyFactory.generatePublic(keySpec);
+
+//                        PKCS8EncodedKeySpec prikeySpec = new PKCS8EncodedKeySpec(pribuffer);
+
+//                        PrivateKey privateKey = (RSAPrivateKey) keyFactory.generatePrivate(prikeySpec);
+            mPos.updateRSA(publicKey, "rsa_public_2048.pem");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            mPos.generateSessionKeys();
+        }
     }
 }
