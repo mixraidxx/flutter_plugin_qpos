@@ -1332,7 +1332,7 @@ public class QPOSServiceListenerImpl extends CQPOSService   {
         map.put("method","onRequestGenerateTransportKey");
         StringBuffer parameters = new StringBuffer();
         parameters.append(result);
-        String parametersJson = gson.toJson(parameters)
+        String parametersJson = gson.toJson(parameters);
         map.put("parameters",parametersJson);
         TRACE.d("onRequestGenerateTransportKey " + parametersJson);
         PosPluginHandler.mEvents.success(JSONObject.toJSONString(map));
