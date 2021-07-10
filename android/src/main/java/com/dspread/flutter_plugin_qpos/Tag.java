@@ -3,8 +3,6 @@ package com.dspread.flutter_plugin_qpos;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.jetbrains.annotations.NotNull;
-
 
 public final class Tag implements Parcelable, Parcelable.Creator {
     private  String tag;
@@ -22,12 +20,11 @@ public final class Tag implements Parcelable, Parcelable.Creator {
         }
     };
 
-    @NotNull
+
     public final String getModelTag() {
         return this.tag;
     }
 
-    @NotNull
     public final String getModelValue() {
         return this.value;
     }
@@ -37,7 +34,7 @@ public final class Tag implements Parcelable, Parcelable.Creator {
         this.value = value;
     }
 
-    public Tag(@NotNull Parcel parcel) {
+    public Tag(Parcel parcel) {
         this(parcel.readString(), parcel.readString());
     }
 
