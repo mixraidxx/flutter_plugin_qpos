@@ -363,4 +363,12 @@ public class PosPluginHandler {
             mPos.generateSessionKeys();
         }
     }
+
+    public static void doCheckCard(){
+        mPos.doCheckCard();
+    }
+
+    public static void updateWorkKeyByTransportKey(String key,String cvk){
+        mPos.updateWorkKeyByTransportKey(key,cvk,key,cvk,key,cvk,0,30);
+    }
 }

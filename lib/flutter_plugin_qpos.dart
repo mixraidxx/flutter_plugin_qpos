@@ -114,6 +114,10 @@ class FlutterPluginQpos {
     await _methodChannel.invokeMethod('doTrade', map);
   }
 
+  Future<void> doCheckCard() async {
+    await _methodChannel.invokeMethod('doCheckCard');
+  }
+
   void setAmount(Map<String, String> params) async {
     await _methodChannel.invokeMethod('setAmount', params);
   }
@@ -261,7 +265,7 @@ class FlutterPluginQpos {
     await _methodChannel.invokeMethod("generateTransportKey");
   }
 
-  void updateIPEKByTransportKey(String ksn, String ipek, String cvk) async {
+  void updateIPEKByTransportKey({String ksn, String ipek, String cvk}) async {
     Map<String, String> params = Map<String, String>();
     params['ksn'] = ksn;
     params['ipek'] = ipek;
@@ -295,6 +299,13 @@ class FlutterPluginQpos {
 
   void updateRSA() async {
     await _methodChannel.invokeMethod("updateRSA");
+  }
+
+  void updateWorkKeyByTransportKey({String key, String cvk}) async {
+    Map<String, String> params = Map<String, String>();
+    params["key"] = key;
+    params["cvk"] = cvk;
+    await _methodChannel.invokeMethod("updateWorkKeyByTransportKey", params);
   }
 }
 

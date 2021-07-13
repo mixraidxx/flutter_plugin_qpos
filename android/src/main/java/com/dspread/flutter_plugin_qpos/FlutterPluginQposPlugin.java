@@ -292,6 +292,12 @@ public class FlutterPluginQposPlugin implements FlutterPlugin, MethodCallHandler
             result.success(true);
         } else if(call.method.equals("updateRSA")){
             PosPluginHandler.updateRsa();
+        } else if(call.method.equals("doCheckCard")){
+            PosPluginHandler.doCheckCard();
+        } else if(call.method.equals("updateWorkKeyByTransportKey")){
+            String key = call.argument("key");
+            String cvk = call.argument("cvk");
+            PosPluginHandler.updateWorkKeyByTransportKey(key,cvk);
         }
         else {
             result.notImplemented();
