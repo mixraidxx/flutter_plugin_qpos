@@ -1336,6 +1336,7 @@ public class QPOSServiceListenerImpl extends CQPOSService   {
         map.put("parameters",json);
         TRACE.d("onRequestGenerateTransportKey " + map);
         PosPluginHandler.mEvents.success(JSONObject.toJSONString(map));
+
     }
 
 

@@ -128,8 +128,8 @@ public class PosPluginHandler {
 
     }
 
-    public static void connectBluetoothDevice(boolean auto, int time, String blueTootchAddress) {
-        mPos.connectBluetoothDevice(auto, time, blueTootchAddress);
+    public static boolean connectBluetoothDevice(boolean auto, int time, String blueTootchAddress) {
+       return mPos.connectBluetoothDevice(auto, time, blueTootchAddress);
     }
 
     public static void connectBLE(String blueTootchAddress) {
