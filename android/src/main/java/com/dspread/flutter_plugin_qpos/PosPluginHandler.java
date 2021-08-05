@@ -30,6 +30,10 @@ import static com.dspread.demoui.utils.DUKPK2009_CBC.TriDesEncryption;
 import static com.dspread.demoui.utils.DUKPK2009_CBC.parseByte2HexStr;
 import static com.dspread.demoui.utils.DUKPK2009_CBC.parseHexStr2Byte;
 
+import org.bouncycastle.asn1.ASN1InputStream;
+import org.bouncycastle.asn1.ASN1Primitive;
+import org.bouncycastle.asn1.pkcs.RSAPublicKey;
+
 
 public class PosPluginHandler {
 
@@ -321,6 +325,12 @@ public class PosPluginHandler {
        return gson.toJson(mPos.getEncryptedDataBlock(0));
     }
 
+    public static String getICCTag(Boolean cipher,int tagCount,String tagArrStr) {
+        QPOSService.EncryptType encription = cipher ? QPOSService.EncryptType.ENCRYPTED : QPOSService.EncryptType.PLAINTEXT;
+        Hashtable<String,String> tags = mPos.getICCTag(encription,0,tagCount,tagArrStr);
+        return gson.toJson(tags);
+    }
+
     public static String tlvDecoder(String tlv){
         EMVParser _parser = new EMVParser();
        ArrayList<Tag> map = _parser.decodeTLV(tlv);
@@ -340,24 +350,13 @@ public class PosPluginHandler {
             BASE64Decoder base64Decoder = new BASE64Decoder();
             byte[] buffer = base64Decoder.decodeBuffer(publicKeyStr);
             String s = QPOSUtil.byteArray2Hex(buffer);
-            TRACE.d("POS " + s);
-            TRACE.d("Cargar nueva llave 2048");
-            TRACE.d("Cargar nueva llave");
-//                        InputStream priopen = getAssets().open("priva.pem");
-//                        String priKeyStr = QPOSUtil.readRSAStream(priopen);
-//                        byte[] pribuffer = base64Decoder.decodeBuffer(priKeyStr);
-//                        s = QPOSUtil.byteArray2Hex(pribuffer);
-//                        TRACE.d("POS" + s);
-
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(buffer);
-            PublicKey publicKey = keyFactory.generatePublic(keySpec);
-
-//                        PKCS8EncodedKeySpec prikeySpec = new PKCS8EncodedKeySpec(pribuffer);
-
-//                        PrivateKey privateKey = (RSAPrivateKey) keyFactory.generatePrivate(prikeySpec);
-            mPos.updateRSA(publicKey, "rsa_public_2048.pem");
-
+            ASN1InputStream in = new ASN1InputStream(buffer);
+            ASN1Primitive obj = in.readObject();
+            RSAPublicKey keyStruct = org.bouncycastle.asn1.pkcs.RSAPublicKey.getInstance(obj);
+            java.security.spec.RSAPublicKeySpec keySpect = new java.security.spec.RSAPublicKeySpec(keyStruct.getModulus(), keyStruct.getPublicExponent());
+            java.security.KeyFactory keyFactoryt = java.security.KeyFactory.getInstance("RSA");
+            PublicKey publickeyt = keyFactoryt.generatePublic(keySpect);
+            mPos.updateRSA(publickeyt, "rsa_public_2048.pem");
         } catch (Exception e) {
             e.printStackTrace();
             mPos.generateSessionKeys();

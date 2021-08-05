@@ -308,6 +308,15 @@ class FlutterPluginQpos {
     params["cvk"] = cvk;
     await _methodChannel.invokeMethod("updateWorkKeyByTransportKey", params);
   }
+
+  Future<String> getICCTag({bool encryption, int tagCounter, String tagArrayStr}) async {
+    Map<String,dynamic> params = Map<String,dynamic>();
+    params['cipher'] = encryption;
+    params['tagCounter'] = tagCounter;
+    params['tagArrayStr'] = tagArrayStr;
+    final String result = await _methodChannel.invokeMethod("getICCTag",params);
+    return result;
+  }
 }
 
 //onQposInfoResult(java.util.Hashtable);
