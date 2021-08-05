@@ -328,7 +328,7 @@ public class PosPluginHandler {
     public static String getICCTag(Boolean cipher,int tagCount,String tagArrStr) {
         QPOSService.EncryptType encription = cipher ? QPOSService.EncryptType.ENCRYPTED : QPOSService.EncryptType.PLAINTEXT;
         Hashtable<String,String> tags = mPos.getICCTag(encription,0,tagCount,tagArrStr);
-        return gson.toJson(tags);
+        return tags.get("tlv");
     }
 
     public static String tlvDecoder(String tlv){
