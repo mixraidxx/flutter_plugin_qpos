@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_plugin_qpos/QPOSModel.dart';
 import 'package:meta/meta.dart' show visibleForTesting;
-import 'package:permission_handler/permission_handler.dart';
 
 class FlutterPluginQpos {
   /// Initializes the plugin and starts listening for potential platform events.
@@ -56,25 +55,6 @@ class FlutterPluginQpos {
     Map<String, String> params = Map<String, String>();
     params['CommunicationMode'] = mode;
     _methodChannel.invokeMethod('initPos', params);
-  }
-
-  Future requestPermission(String mode) async {
-    // request permission
-    Map<PermissionGroup, PermissionStatus> permissions =
-        await PermissionHandler()
-            .requestPermissions([PermissionGroup.location]);
-
-    // request result
-    PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.location);
-
-    if (permission == PermissionStatus.granted) {
-      print("granted");
-      init(mode);
-      scanQPos2Mode(20);
-    } else {
-      print("no permission");
-    }
   }
 
   Future<String> get posSdkVersion async {

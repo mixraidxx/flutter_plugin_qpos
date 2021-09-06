@@ -16,7 +16,6 @@ dependencies:
   #  permission_handler: ^3.0.0
   #  fluttertoast: ^2.1.1
   #  权限
-  permission_handler: ^3.3.0
   meta: ^1.1.8
 
 dev_dependencies:
