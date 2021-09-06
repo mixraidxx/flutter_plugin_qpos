@@ -361,7 +361,7 @@ public class PosPluginHandler {
         } catch (Exception e) {
             e.printStackTrace();
             mPos.generateSessionKeys();
-            return false
+            return false;
         }
     }
 
