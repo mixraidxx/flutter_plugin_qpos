@@ -350,7 +350,6 @@ public class FlutterPluginQposPlugin implements FlutterPlugin, MethodCallHandler
             enableBtIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
             mContext.startActivity(enableBtIntent);
-            return;
         }
         LocationManager lm = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         boolean ok = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
