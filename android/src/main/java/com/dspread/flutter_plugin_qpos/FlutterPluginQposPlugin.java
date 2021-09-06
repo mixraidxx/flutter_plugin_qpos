@@ -299,6 +299,12 @@ public class FlutterPluginQposPlugin implements FlutterPlugin, MethodCallHandler
             String key = call.argument("key");
             String cvk = call.argument("cvk");
             PosPluginHandler.updateWorkKeyByTransportKey(key,cvk);
+        } else if(call.method.equals("getICCTag")) {
+            Boolean encryption = call.argument("cipher");
+            int TagCount = call.argument("tagCounter");
+            String tagArrayStr = call.argument("tagArrayStr");
+            String iccTags = PosPluginHandler.getICCTag(encryption,TagCount, tagArrayStr);
+            result.success(iccTags);
         }
         else {
             result.notImplemented();

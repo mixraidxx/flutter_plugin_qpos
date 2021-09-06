@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Flutter Plugins">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../flutter/.pub-cache/hosted/pub.dartlang.org/permission_handler-3.3.0" />
       <root url="file://$PROJECT_DIR$" />
+      <root url="file://$USER_HOME$/Desarrollo/flutter/.pub-cache/hosted/pub.dartlang.org/permission_handler-3.3.0" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
