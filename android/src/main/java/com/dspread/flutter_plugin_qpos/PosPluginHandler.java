@@ -342,7 +342,7 @@ public class PosPluginHandler {
         mPos.cancelTrade();
     }
 
-    public boolean void updateRsa(){
+    public static boolean updateRsa(){
         try {
             InputStream open = mContext.getAssets().open("rsa_public_2048.pem");
             String publicKeyStr = QPOSUtil.readRSAStream(open);
