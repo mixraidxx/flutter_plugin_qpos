@@ -289,12 +289,20 @@ class FlutterPluginQpos {
     await _methodChannel.invokeMethod("updateWorkKeyByTransportKey", params);
   }
 
-  Future<String> getICCTag({bool encryption, int tagCounter, String tagArrayStr}) async {
-    Map<String,dynamic> params = Map<String,dynamic>();
+  Future<String> getICCTag(
+      {bool encryption, int tagCounter, String tagArrayStr}) async {
+    Map<String, dynamic> params = Map<String, dynamic>();
     params['cipher'] = encryption;
     params['tagCounter'] = tagCounter;
     params['tagArrayStr'] = tagArrayStr;
-    final String result = await _methodChannel.invokeMethod("getICCTag",params);
+    final String result =
+        await _methodChannel.invokeMethod("getICCTag", params);
+    return result;
+  }
+
+  Future<bool> requestBluePermision() async {
+    final bool result =
+        await _methodChannel.invokeMethod("requestBluePermision");
     return result;
   }
 }

@@ -305,6 +305,9 @@ public class FlutterPluginQposPlugin implements FlutterPlugin, MethodCallHandler
             String tagArrayStr = call.argument("tagArrayStr");
             String iccTags = PosPluginHandler.getICCTag(encryption,TagCount, tagArrayStr);
             result.success(iccTags);
+        } else if (call.method.equals("requestBluePermision")) {
+            Boolean requestResult = requestBluePermision();
+            result.success(requestResult);
         }
         else {
             result.notImplemented();
@@ -335,6 +338,33 @@ public class FlutterPluginQposPlugin implements FlutterPlugin, MethodCallHandler
             }
         } else {
 //            return false;
+        }
+    }
+
+    private boolean requestBluePermision() {
+        TRACE.d("requestBluePermision");
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        if (!adapter.isEnabled()) {//表示蓝牙不可用
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+
+            enableBtIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            mContext.startActivity(enableBtIntent);
+            return;
+        }
+        LocationManager lm = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        boolean ok = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (ok) {//开了定位服务
+            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Log.e("POS_SDK", "Permisos No Obtenidos");
+                ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION}, 1111);
+                return false;
+            } else {
+                Log.e("POS_SDK", "Permisos Obtenidos");
+                return true;
+            }
+        } else {
+            return false;
         }
     }
 
