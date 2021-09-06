@@ -278,8 +278,9 @@ class FlutterPluginQpos {
     await _methodChannel.invokeMethod("cancelTrade");
   }
 
-  void updateRSA() async {
-    await _methodChannel.invokeMethod("updateRSA");
+  Future<bool> updateRSA() async {
+    final result = await _methodChannel.invokeMethod("updateRSA");
+    return result;
   }
 
   void updateWorkKeyByTransportKey({String key, String cvk}) async {

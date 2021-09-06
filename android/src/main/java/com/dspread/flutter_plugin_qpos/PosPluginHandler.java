@@ -342,7 +342,7 @@ public class PosPluginHandler {
         mPos.cancelTrade();
     }
 
-    public static void updateRsa(){
+    public boolean void updateRsa(){
         try {
             InputStream open = mContext.getAssets().open("rsa_public_2048.pem");
             String publicKeyStr = QPOSUtil.readRSAStream(open);
@@ -357,9 +357,11 @@ public class PosPluginHandler {
             java.security.KeyFactory keyFactoryt = java.security.KeyFactory.getInstance("RSA");
             PublicKey publickeyt = keyFactoryt.generatePublic(keySpect);
             mPos.updateRSA(publickeyt, "rsa_public_2048.pem");
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
             mPos.generateSessionKeys();
+            return false
         }
     }
 
