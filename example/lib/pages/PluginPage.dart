@@ -1,6 +1,4 @@
 import 'dart:collection';
-import 'dart:convert';
-import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -14,9 +12,6 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:toast/toast.dart';
 
 import '../Utils.dart';
-//import 'package:permission_handler/permission_handler.dart';
-//
-//import 'package:fluttertoast/fluttertoast.dart';
 
 class PluginPage extends StatefulWidget {
   @override

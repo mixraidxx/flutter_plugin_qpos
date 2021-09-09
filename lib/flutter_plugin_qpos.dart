@@ -18,7 +18,7 @@ class FlutterPluginQpos {
 
       _instance = FlutterPluginQpos.private(methodChannel, eventChannel);
     }
-    return _instance;
+    return _instance!;
   }
 
   /// This constructor is only used for testing and shouldn't be accessed by
@@ -26,7 +26,7 @@ class FlutterPluginQpos {
   @visibleForTesting
   FlutterPluginQpos.private(this._methodChannel, this._eventChannel);
 
-  static FlutterPluginQpos _instance;
+  static FlutterPluginQpos? _instance;
 
   final MethodChannel _methodChannel;
   final EventChannel _eventChannel;
@@ -34,9 +34,9 @@ class FlutterPluginQpos {
 
 //
 //  /// Fires whenever the battery state changes.
-  Stream<QPOSModel> _onPosListenerCalled;
+  Stream<QPOSModel>? _onPosListenerCalled;
 
-  Stream<QPOSModel> get onPosListenerCalled {
+  Stream<QPOSModel>? get onPosListenerCalled {
     if (_onPosListenerCalled == null) {
       _onPosListenerCalled = _eventChannel
           .receiveBroadcastStream()
@@ -57,13 +57,13 @@ class FlutterPluginQpos {
     _methodChannel.invokeMethod('initPos', params);
   }
 
-  Future<String> get posSdkVersion async {
-    String version = await _methodChannel.invokeMethod('getPosSdkVersion');
+  Future<String?> get posSdkVersion async {
+    String? version = await _methodChannel.invokeMethod('getPosSdkVersion');
     return version;
   }
 
-  Future<bool> connectBluetoothDevice(String addre) async {
-    final bool result = await _methodChannel
+  Future<bool?> connectBluetoothDevice(String addre) async {
+    final bool? result = await _methodChannel
         .invokeMethod('connectBluetoothDevice', {"bluetooth_addr": addre});
     return result;
   }
@@ -115,9 +115,9 @@ class FlutterPluginQpos {
     await _methodChannel.invokeMethod('sendTime', params);
   }
 
-  Future<HashMap> getNFCBatchData() async {
-    Future<HashMap> map = await _methodChannel.invokeMethod('getNFCBatchData');
-    return map;
+  Future<HashMap>? getNFCBatchData() async {
+    Future<HashMap>? map = await _methodChannel.invokeMethod('getNFCBatchData');
+    return map!;
   }
 
   void sendPin(String s) async {
@@ -199,8 +199,8 @@ class FlutterPluginQpos {
     await _methodChannel.invokeMethod('setMasterKey', params);
   }
 
-  Future<int> getUpdateProgress() async {
-    int process = await _methodChannel.invokeMethod('getUpdateProgress');
+  Future<int?> getUpdateProgress() async {
+    int? process = await _methodChannel.invokeMethod('getUpdateProgress');
     return process;
   }
 
@@ -216,28 +216,28 @@ class FlutterPluginQpos {
     await _methodChannel.invokeMethod('pinMapSync', params);
   }
 
-  Future<String> generateIPEK(String bdk, String ksn) async {
+  Future<String?> generateIPEK(String bdk, String ksn) async {
     Map<String, String> params = Map<String, String>();
     params['ksn'] = ksn;
     params['bdk'] = bdk;
-    final String result =
+    final String? result =
         await _methodChannel.invokeMethod('generateIPEK', params);
     return result;
   }
 
-  Future<String> generateCheckValue(String key) async {
+  Future<String?> generateCheckValue(String key) async {
     Map<String, String> params = Map<String, String>();
     params['key'] = key;
-    final String result =
+    final String? result =
         await _methodChannel.invokeMethod("generateCheckValue", params);
     return result;
   }
 
-  Future<String> tripleDesEncryption(String key, String data) async {
+  Future<String?> tripleDesEncryption(String key, String data) async {
     Map<String, String> params = Map<String, String>();
     params['key'] = key;
     params['data'] = data;
-    final String result =
+    final String? result =
         await _methodChannel.invokeMethod("tripleDesEncryption", params);
     return result;
   }
@@ -246,31 +246,33 @@ class FlutterPluginQpos {
     await _methodChannel.invokeMethod("generateTransportKey");
   }
 
-  void updateIPEKByTransportKey({String ksn, String ipek, String cvk}) async {
-    Map<String, String> params = Map<String, String>();
+  void updateIPEKByTransportKey(
+      {String? ksn, String? ipek, String? cvk}) async {
+    Map<String, String?> params = Map<String, String?>();
     params['ksn'] = ksn;
     params['ipek'] = ipek;
     params['cvk'] = cvk;
     await _methodChannel.invokeMethod("updateIPEKByTransportKey");
   }
 
-  Future<bool> sendCvv(String cvv) async {
+  Future<bool?> sendCvv(String cvv) async {
     Map<String, String> params = Map<String, String>();
     params['cvv'] = cvv;
-    final bool result = await _methodChannel.invokeMethod("sendCvv", params);
+    final bool? result = await _methodChannel.invokeMethod("sendCvv", params);
     return result;
   }
 
-  Future<String> getEncryptedDataBlock() async {
-    final String result =
+  Future<String?> getEncryptedDataBlock() async {
+    final String? result =
         await _methodChannel.invokeMethod("getEncryptedDataBlock");
     return result;
   }
 
-  Future<String> tlvDecoder(String tlv) async {
+  Future<String?> tlvDecoder(String tlv) async {
     Map<String, String> params = Map<String, String>();
     params['tlv'] = tlv;
-    final String result = await _methodChannel.invokeMethod("parseTLV", params);
+    final String? result =
+        await _methodChannel.invokeMethod("parseTLV", params);
     return result;
   }
 
@@ -278,31 +280,31 @@ class FlutterPluginQpos {
     await _methodChannel.invokeMethod("cancelTrade");
   }
 
-  Future<bool> updateRSA() async {
+  Future<bool?> updateRSA() async {
     final result = await _methodChannel.invokeMethod("updateRSA");
     return result;
   }
 
-  void updateWorkKeyByTransportKey({String key, String cvk}) async {
-    Map<String, String> params = Map<String, String>();
+  void updateWorkKeyByTransportKey({String? key, String? cvk}) async {
+    Map<String, String?> params = Map<String, String?>();
     params["key"] = key;
     params["cvk"] = cvk;
     await _methodChannel.invokeMethod("updateWorkKeyByTransportKey", params);
   }
 
-  Future<String> getICCTag(
-      {bool encryption, int tagCounter, String tagArrayStr}) async {
+  Future<String?> getICCTag(
+      {bool? encryption, int? tagCounter, String? tagArrayStr}) async {
     Map<String, dynamic> params = Map<String, dynamic>();
     params['cipher'] = encryption;
     params['tagCounter'] = tagCounter;
     params['tagArrayStr'] = tagArrayStr;
-    final String result =
+    final String? result =
         await _methodChannel.invokeMethod("getICCTag", params);
     return result;
   }
 
-  Future<bool> requestBluePermision() async {
-    final bool result =
+  Future<bool?> requestBluePermision() async {
+    final bool? result =
         await _methodChannel.invokeMethod("requestBluePermision");
     return result;
   }

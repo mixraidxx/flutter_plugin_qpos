@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_plugin_qpos/flutter_plugin_qpos.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('flutter_plugin_qpos');
@@ -23,7 +22,6 @@ void main() {
     StringBuffer buffer = new StringBuffer();
 
     String text = "4";
-
 
     buffer.write(listAddValue(int.parse(text)));
 
@@ -46,27 +44,23 @@ void main() {
 
 String listAddValue(int value) {
   String reslut = "0000";
-  String string = null;
-  var list = new List<int>();
+  String? string = null;
+  List<int> list = [];
   list.add(value);
-  var fromList = null;
-  if(value >= 256){
-    fromList =  Uint16List.fromList(list);
+  dynamic fromList = null;
+  if (value >= 256) {
+    fromList = Uint16List.fromList(list);
     string = Uint16ListToHexStr(fromList);
     return string;
-  }else{
-    fromList =  Uint8List.fromList(list);
+  } else {
+    fromList = Uint8List.fromList(list);
     string = Uint8ListToHexStr(fromList);
     return reslut.substring(4 - string.length, 4) + string;
   }
-
 }
 
 String Uint16ListToHexStr(Uint16List list) {
   final String HEXES = "0123456789ABCDEF";
-  if (list == null) {
-    return null;
-  }
   var hex = StringBuffer();
   for (int i = 0; i < list.length; i++) {
     hex.write(HEXES[((list[i] & 0xF000) >> 12)]);
@@ -79,9 +73,6 @@ String Uint16ListToHexStr(Uint16List list) {
 
 String Uint8ListToHexStr(Uint8List list) {
   final String HEXES = "0123456789ABCDEF";
-  if (list == null) {
-    return null;
-  }
   var hex = StringBuffer();
 
   for (int i = 0; i < list.length; i++) {
