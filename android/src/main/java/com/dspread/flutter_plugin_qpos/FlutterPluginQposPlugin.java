@@ -99,7 +99,7 @@ public class FlutterPluginQposPlugin implements FlutterPlugin, MethodCallHandler
             PosPluginHandler.getPosSdkVersion(result);
         } else if (call.method.equals("scanQPos2Mode")) {
             TRACE.d("scanQPos2Mode");
-            //checkBluePermision();
+            checkBluePermision();
 //      int scanTime = call.argument("scanTime");
             PosPluginHandler.scanQPos2Mode(20);
         } else if (call.method.equals("startScanQposBLE")) {
