@@ -1327,7 +1327,6 @@ public class QPOSServiceListenerImpl extends CQPOSService   {
     @Override
     public void onRequestGenerateTransportKey(Hashtable result) {
         super.onRequestGenerateTransportKey(result);
-
         String json = gson.toJson(result);
         Log.e("Android", json);
         TRACE.d("Hola, requestGenerate");
@@ -1336,8 +1335,11 @@ public class QPOSServiceListenerImpl extends CQPOSService   {
         map.put("parameters",json);
         TRACE.d("onRequestGenerateTransportKey " + map);
         PosPluginHandler.mEvents.success(JSONObject.toJSONString(map));
-
     }
+
+
+
+
 
 
 

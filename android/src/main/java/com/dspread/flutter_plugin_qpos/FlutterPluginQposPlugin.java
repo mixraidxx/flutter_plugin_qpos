@@ -123,6 +123,7 @@ public class FlutterPluginQposPlugin implements FlutterPlugin, MethodCallHandler
         } else if (call.method.equals("getQposInfo")) {
             TRACE.d("getQposInfo");
             PosPluginHandler.getQposInfo();
+
         } else if (call.method.equals("getUpdateCheckValue")) {
             TRACE.d("getUpdateCheckValue");
             PosPluginHandler.getUpdateCheckValue();
@@ -309,6 +310,8 @@ public class FlutterPluginQposPlugin implements FlutterPlugin, MethodCallHandler
         } else if (call.method.equals("requestBluePermision")) {
             Boolean requestResult = requestBluePermision();
             result.success(requestResult);
+        } else if (call.method.equals("updateEmvApp")){
+            PosPluginHandler.updateEmvApp();
         }
         else {
             result.notImplemented();

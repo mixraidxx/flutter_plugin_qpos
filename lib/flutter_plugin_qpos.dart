@@ -308,6 +308,10 @@ class FlutterPluginQpos {
         await _methodChannel.invokeMethod("requestBluePermision");
     return result;
   }
+
+  void updateEmvApp() async {
+    await _methodChannel.invokeMethod("updateEmvApp");
+  }
 }
 
 //onQposInfoResult(java.util.Hashtable);

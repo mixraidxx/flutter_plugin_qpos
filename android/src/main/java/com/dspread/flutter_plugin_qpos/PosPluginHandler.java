@@ -7,6 +7,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dspread.xpos.EmvAppTag;
 import com.dspread.xpos.QPOSService;
 import com.google.gson.Gson;
 
@@ -371,5 +372,11 @@ public class PosPluginHandler {
 
     public static void updateWorkKeyByTransportKey(String key,String cvk){
         mPos.updateWorkKeyByTransportKey(key,cvk,key,cvk,key,cvk,0,30);
+    }
+
+    public static void updateEmvApp(){
+        ArrayList list = new ArrayList<String>();
+        list.add(EmvAppTag.terminal_execute_cvm_limit+"000000000000");
+        mPos.updateEmvAPP(QPOSService.EMVDataOperation.update, list);
     }
 }
