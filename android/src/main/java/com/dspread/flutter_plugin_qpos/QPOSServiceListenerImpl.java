@@ -117,6 +117,7 @@ public class QPOSServiceListenerImpl extends CQPOSService   {
         map.put("method","onQposIdResult");
         String finalJson = gson.toJson(posIdTable);
         map.put("parameters",finalJson);
+        TRACE.d(finalJson);
         PosPluginHandler.mEvents.success(JSONObject.toJSONString(map));
     }
 
