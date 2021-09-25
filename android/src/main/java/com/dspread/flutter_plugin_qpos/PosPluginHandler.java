@@ -345,7 +345,7 @@ public class PosPluginHandler {
 
     public static boolean updateRsa(){
         try {
-            InputStream open = mContext.getAssets().open("rsa_prod.pem");
+            InputStream open = mContext.getAssets().open("public_prod.pem");
             String publicKeyStr = QPOSUtil.readRSAStream(open);
             TRACE.d(publicKeyStr);
             BASE64Decoder base64Decoder = new BASE64Decoder();
@@ -357,7 +357,7 @@ public class PosPluginHandler {
             java.security.spec.RSAPublicKeySpec keySpect = new java.security.spec.RSAPublicKeySpec(keyStruct.getModulus(), keyStruct.getPublicExponent());
             java.security.KeyFactory keyFactoryt = java.security.KeyFactory.getInstance("RSA");
             PublicKey publickeyt = keyFactoryt.generatePublic(keySpect);
-            mPos.updateRSA(publickeyt, "rsa_prod.pem");
+            mPos.updateRSA(publickeyt, "public_prod.pem");
             return true;
         } catch (Exception e) {
             e.printStackTrace();
