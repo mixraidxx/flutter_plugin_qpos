@@ -280,8 +280,10 @@ class FlutterPluginQpos {
     await _methodChannel.invokeMethod("cancelTrade");
   }
 
-  Future<bool?> updateRSA() async {
-    final result = await _methodChannel.invokeMethod("updateRSA");
+  Future<bool?> updateRSA(String rsaFilename) async {
+    Map<String, String> params = Map<String, String>();
+    params['rsaName'] = rsaFilename;
+    final result = await _methodChannel.invokeMethod("updateRSA", params);
     return result;
   }
 
