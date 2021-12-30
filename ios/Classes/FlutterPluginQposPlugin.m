@@ -296,7 +296,15 @@
     aStr = [aStr stringByAppendingString:@"updateWorkKeyFlag: "];
     aStr = [aStr stringByAppendingString:posInfoData[@"updateWorkKeyFlag"]];
     NSString *posinfo = aStr;
-    [self sendMessage:@"onQposInfoResult" parameter:posinfo];
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:posInfoData options:NSJSONWritingPrettyPrinted error:&error];
+    if (!jsonData) {
+        NSLog(@"Got an error: %@", error);
+    } else {
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        [self sendMessage:@"onQposInfoResult" parameter:jsonString];
+    }
+    
 }
 
 -(void)scanBluetooth{
