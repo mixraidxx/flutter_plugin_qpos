@@ -222,80 +222,20 @@
 }
 
 -(void) onQposIdResult: (NSDictionary*)posId{
-    NSString *aStr = [@"posId:" stringByAppendingString:posId[@"posId"]];
-    
-    NSString *temp = [@"psamId:" stringByAppendingString:posId[@"psamId"]];
-    aStr = [aStr stringByAppendingString:@"\n"];
-    aStr = [aStr stringByAppendingString:temp];
-    
-    temp = [@"merchantId:" stringByAppendingString:posId[@"merchantId"]];
-    aStr = [aStr stringByAppendingString:@"\n"];
-    aStr = [aStr stringByAppendingString:temp];
-    
-    temp = [@"vendorCode:" stringByAppendingString:posId[@"vendorCode"]];
-    aStr = [aStr stringByAppendingString:@"\n"];
-    aStr = [aStr stringByAppendingString:temp];
-    
-    temp = [@"deviceNumber:" stringByAppendingString:posId[@"deviceNumber"]];
-    aStr = [aStr stringByAppendingString:@"\n"];
-    aStr = [aStr stringByAppendingString:temp];
-    
-    temp = [@"psamNo:" stringByAppendingString:posId[@"psamNo"]];
-    aStr = [aStr stringByAppendingString:@"\n"];
-    aStr = [aStr stringByAppendingString:temp];
-    
-    NSLog(@"posid == %@",aStr);
-    [self sendMessage:@"onQposIdResult" parameter:aStr];
+    NSLog(@"onQposIdResult: %@", posId);
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:posId options:NSJSONWritingPrettyPrinted error:&error];
+    if (!jsonData) {
+        NSLog(@"Got an error: %@", error);
+    } else {
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        [self sendMessage:@"onQposIdResult" parameter:jsonString];
+    }
+   
 }
 
 -(void) onQposInfoResult: (NSDictionary*)posInfoData{
     NSLog(@"onQposInfoResult: %@",posInfoData);
-    NSString *aStr = @"SUB :";
-    aStr = [aStr stringByAppendingString:posInfoData[@"SUB"]];
-    aStr = [aStr stringByAppendingString:@"\n"];
-    aStr = [aStr stringByAppendingString:posInfoData[@"bootloaderVersion"]];
-    
-    aStr = [aStr stringByAppendingString:@"\n"];
-    aStr = [aStr stringByAppendingString:@"Firmware Version: "];
-    aStr = [aStr stringByAppendingString:posInfoData[@"firmwareVersion"]];
-    
-    aStr = [aStr stringByAppendingString:@"\n"];
-    aStr = [aStr stringByAppendingString:@"Hardware Version: "];
-    aStr = [aStr stringByAppendingString:posInfoData[@"hardwareVersion"]];
-    
-    
-    NSString *batteryPercentage = posInfoData[@"batteryPercentage"];
-    if (batteryPercentage==nil || [@"" isEqualToString:batteryPercentage]) {
-        aStr = [aStr stringByAppendingString:@"\n"];
-        aStr = [aStr stringByAppendingString:@"Battery Level: "];
-        aStr = [aStr stringByAppendingString:posInfoData[@"batteryLevel"]];
-    }else{
-        aStr = [aStr stringByAppendingString:@"\n"];
-        aStr = [aStr stringByAppendingString:@"Battery Percentage: "];
-        aStr = [aStr stringByAppendingString:posInfoData[@"batteryPercentage"]];
-    }
-    aStr = [aStr stringByAppendingString:@"\n"];
-    aStr = [aStr stringByAppendingString:@"Charge: "];
-    aStr = [aStr stringByAppendingString:posInfoData[@"isCharging"]];
-    
-    aStr = [aStr stringByAppendingString:@"\n"];
-    aStr = [aStr stringByAppendingString:@"USB: "];
-    aStr = [aStr stringByAppendingString:posInfoData[@"isUsbConnected"]];
-    
-    aStr = [aStr stringByAppendingString:@"\n"];
-    aStr = [aStr stringByAppendingString:@"Track 1 Supported: "];
-    aStr = [aStr stringByAppendingString:posInfoData[@"isSupportedTrack1"]];
-    
-    aStr = [aStr stringByAppendingString:@"\n"];
-    aStr = [aStr stringByAppendingString:@"Track 2 Supported: "];
-    aStr = [aStr stringByAppendingString:posInfoData[@"isSupportedTrack2"]];
-    aStr = [aStr stringByAppendingString:@"\n"];
-    aStr = [aStr stringByAppendingString:@"Track 3 Supported: "];
-    aStr = [aStr stringByAppendingString:posInfoData[@"isSupportedTrack3"]];
-    aStr = [aStr stringByAppendingString:@"\n"];
-    aStr = [aStr stringByAppendingString:@"updateWorkKeyFlag: "];
-    aStr = [aStr stringByAppendingString:posInfoData[@"updateWorkKeyFlag"]];
-    NSString *posinfo = aStr;
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:posInfoData options:NSJSONWritingPrettyPrinted error:&error];
     if (!jsonData) {
