@@ -1,4 +1,5 @@
 #import "FlutterPluginQposPlugin.h"
+#import "SGTLVDecode.h"
 
 @interface FlutterPluginQposPlugin()
 @property (nonatomic, strong)FlutterEventChannel *eventChannel;
@@ -119,6 +120,73 @@
       [self.mPos setMasterKey:key checkValue:checkValue keyIndex:keyIndex];
   }else if ([@"updatePosFirmware" isEqualToString:call.method]) {
       [self updatePosFirmwareTest];
+  }else if ([@"generateTransportKey" isEqualToString:call.method ]) {
+      NSInteger delay = 15;
+      [self.mPos generateTransportKey:delay dataBlock:^(NSDictionary *data) {
+          NSLog(@"transportKey generado correctamente: %@",data);
+          NSError *error;
+          NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data
+                                                             options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
+                                                               error:&error];
+          if (! jsonData) {
+              NSLog(@"Got an error: %@", error);
+          } else {
+              NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+              [self sendMessage:@"onRequestGenerateTransportKey" parameter:jsonString];
+          }
+         
+      }];
+  }else if ([@"updateRSA" isEqualToString:call.method]){
+      NSLog(@"Actualiza llave rsa");
+  }else if ([@"sendCvv" isEqualToString:call.method]) {
+      NSLog(@"SendCVV");
+      NSString *cvv = [call.arguments objectForKey:@"cvv"];
+      [self.mPos sendCVV:cvv resultBlock:^(BOOL success) {
+          result(@(success));
+      }];
+  }else if([@"getEncryptedDataBlock" isEqualToString:call.method]){
+      NSLog(@"GETEncryptedData");
+      NSInteger index = 0;
+      [self.mPos getEncryptedDataBlock:index dataBlock:^(NSDictionary* data) {
+          NSError *error;
+          NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:&error];
+          if (!jsonData) {
+              NSLog(@"Got an error: %@", error);
+          } else {
+              NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+              result(jsonString);
+          }
+      }];
+  }else if([@"parseTLV" isEqualToString:call.method]) {
+      NSString *tlv = [call.arguments objectForKey:@"tlv"];
+      result([self parseDecoder:tlv]);
+  } else if([@"getICCTag" isEqualToString:call.method]){
+      BOOL cipher = [call.arguments objectForKey:@"cipher"];
+      NSNumber *tagcounter = [call.arguments objectForKey:@"tagCounter"];
+      NSString *tagString = [call.arguments objectForKey:@"tagArrayStr"];
+      EncryptType iscipher;
+      if (cipher) {
+          iscipher = EncryptType_encrypted;
+      } else {
+          iscipher = EncryptType_plaintext;
+      }
+      NSError *error;
+      NSDictionary *data =  [self.mPos getICCTag:iscipher tagCount:tagcounter.integerValue tagArrStr:tagString];
+      NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:&error];
+      if (!jsonData) {
+          NSLog(@"Got an error: %@",error);
+      } else {
+          NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+          result(jsonString);
+      }
+  }else if([@"updateWorkKeyByTransportKey" isEqualToString:call.method]) {
+      NSString *key = [call.arguments objectForKey:@"key"];
+      NSString *cvk = [call.arguments objectForKey:@"cvk"];
+      NSInteger index = 0;
+      NSInteger timeout = 30;
+      [self.mPos updateWorkKeyByTransportKey:key pinKeyCheck:cvk trackKey:key trackKeyCheck:cvk macKey:key macKeyCheck:cvk keyIndex:index timeout:timeout block:^(BOOL isSuccess) {
+          result(@(isSuccess));
+      }];
   }else {
       result(FlutterMethodNotImplemented);
   }
@@ -771,4 +839,20 @@
 
     return mutStr;
 }
+
+- (NSString *)parseDecoder:(NSString *) tlv {
+    NSDictionary *value = [SGTLVDecode decodeWithString:tlv];
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:value
+                                                       options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
+                                                         error:&error];
+    if (! jsonData) {
+        NSLog(@"Got an error: %@", error);
+        return nil;
+    } else {
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        return jsonString;
+    }
+}
+
 @end

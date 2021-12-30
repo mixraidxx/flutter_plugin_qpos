@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 @class CBPeripheral;
-
+typedef void (^MPUInfoBlock)(NSDictionary *mpuInfoDict);
 typedef NS_ENUM(NSInteger, PosType) {
     PosType_AUDIO,
     PosType_BLUETOOTH,
@@ -25,8 +25,7 @@ typedef NS_ENUM(NSInteger, UpdateInformationResult) {
     UpdateInformationResult_UPDATING
 };
 
-typedef NS_ENUM(NSInteger, DoTradeResult)
-{
+typedef NS_ENUM(NSInteger, DoTradeResult){
     DoTradeResult_NONE,
     DoTradeResult_MCR,
     DoTradeResult_ICC,
@@ -37,10 +36,12 @@ typedef NS_ENUM(NSInteger, DoTradeResult)
     DoTradeResult_NFC_ONLINE,   // add 20150715
     DoTradeResult_NFC_OFFLINE,
     DoTradeResult_NFC_DECLINED,
+    DoTradeResult_TRY_ANOTHER_INTERFACE,
+    DoTradeResult_CARD_NOT_SUPPORT,
+    DoTradeResult_PLS_SEE_PHONE
 };
 
-typedef NS_ENUM(NSInteger, CHECKVALUE_KEYTYPE)
-{
+typedef NS_ENUM(NSInteger, CHECKVALUE_KEYTYPE){
     MKSK_TMK,
     MKSK_PIK,
     MKSK_TDK,
@@ -58,11 +59,13 @@ typedef NS_ENUM(NSInteger, CHECKVALUE_KEYTYPE)
 
 typedef NS_ENUM(NSInteger, EmvOption)
 {
-    EmvOption_START, EmvOption_START_WITH_FORCE_ONLINE
+    EmvOption_START,
+    EmvOption_START_WITH_FORCE_ONLINE,
+    EmvOption_START_WITH_FORCE_PIN,
+    EmvOption_START_WITH_FORCE_ONLINE_FORCE_PIN
 };
 
-typedef NS_ENUM(NSInteger, Error)
-{
+typedef NS_ENUM(NSInteger, Error){
     Error_TIMEOUT,
     Error_MAC_ERROR,
     Error_CMD_NOT_AVAILABLE,
@@ -87,8 +90,7 @@ typedef NS_ENUM(NSInteger, Error)
     Error_QPOS_MEMORY_OVERFLOW
 };
 
-typedef NS_ENUM(NSInteger, DHError)
-{
+typedef NS_ENUM(NSInteger, DHError){
     DHError_TIMEOUT,
     DHError_MAC_ERROR,
     DHError_CMD_NOT_AVAILABLE,
@@ -110,12 +112,12 @@ typedef NS_ENUM(NSInteger, DHError)
     DHError_ICC_ONLINE_TIMEOUT,
     DHError_AMOUNT_OUT_OF_LIMIT,
     DHError_DIGITS_UNAVAILABLE,
-    DHError_QPOS_MEMORY_OVERFLOW
+    DHError_QPOS_MEMORY_OVERFLOW,
+    DHError_SELECT_APP_TIMEOUT
 };
 
 
-typedef NS_ENUM(NSInteger, Display)
-{
+typedef NS_ENUM(NSInteger, Display){
     Display_TRY_ANOTHER_INTERFACE,
     Display_PLEASE_WAIT,
     Display_REMOVE_CARD,
@@ -128,8 +130,8 @@ typedef NS_ENUM(NSInteger, Display)
     Display_INPUT_OFFLINE_PIN_ONLY,
     Display_INPUT_LAST_OFFLINE_PIN,
     Display_CARD_REMOVED,
-    Display_MSR_DATA_READY
-    
+    Display_MSR_DATA_READY,
+    Display_QPOS_MEMORY_OVERFLOW
 };
 
 typedef NS_ENUM(NSInteger, TransactionResult) {
@@ -147,9 +149,14 @@ typedef NS_ENUM(NSInteger, TransactionResult) {
     TransactionResult_INVALID_ICC_DATA,
     TransactionResult_FALLBACK,
     TransactionResult_NFC_TERMINATED,
-    TransactionResult_TRADE_LOG_FULL
-    
+    TransactionResult_TRADE_LOG_FULL,
+    TransactionResult_CONTACTLESS_TRANSACTION_NOT_ALLOW,
+    TransactionResult_CARD_BLOCKED,
+    TransactionResult_TOKEN_INVALID,
+    TransactionResult_APP_BLOCKED,
+    TransactionResult_MULTIPLE_CARDS,
 };
+
 typedef NS_ENUM(NSInteger,DoTradeLog) {
     DoTradeLog_clear,
     DoTradeLog_getAllCount,
@@ -209,7 +216,9 @@ typedef NS_ENUM(NSInteger, CardTradeMode) {
     CardTradeMode_TAP_INSERT_CARD_NOTUP,//
     CardTradeMode_TAP_INSERT_CARD_TUP,//
     CardTradeMode_SWIPE_TAP_INSERT_CARD_Down,//下翻建
-    CardTradeMode_SWIPE_TAP_INSERT_CARD_NOTUP_UNALLOWED_LOW_TRADE
+    CardTradeMode_SWIPE_TAP_INSERT_CARD_NOTUP_UNALLOWED_LOW_TRADE,
+    CardTradeMode_SWIPE_INSERT_CARD_UNALLOWED_LOW_TRADE,
+    CardTradeMode_SWIPE_TAP_INSERT_CARD_UNALLOWED_LOW_TRADE_NEW
 };
 
 
@@ -242,6 +251,22 @@ typedef NS_ENUM(NSInteger,SessionKeyType) {
     SessionKeyType_PINKEY,
     SessionKeyType_TRACKKEY,
     SessionKeyType_PINKEY_TRACKKEY
+};
+
+typedef NS_ENUM(NSInteger,FelicaOpMode){
+    FelicaOpMode_POWER_ON,
+    FelicaOpMode_SEND_APDU,
+    FelicaOpMode_POWER_OFF
+};
+
+typedef NS_ENUM(NSInteger,FelicaStatusCode){
+    FelicaStatusCode_NFC_FELICA_SUCCESS,
+    FelicaStatusCode_NFC_FELICA_PARAM_ERROR,
+    FelicaStatusCode_NFC_FELICA_POLL_ERROR,
+    FelicaStatusCode_NFC_FELICA_OPERATION_ERROR,
+    FelicaStatusCode_NFC_FELICA_RAW_TRANS_ERROR,
+    FelicaStatusCode_NFC_FELICA_TIMEOUT,
+    FelicaStatusCode_NFC_FELICA_ERROR_END,
 };
 
 @protocol QPOSServiceListener<NSObject>
@@ -298,7 +323,14 @@ typedef NS_ENUM(NSInteger,SessionKeyType) {
 -(void)onGetDevicePublicKey:(NSString *)clearKeys;
 -(void)onQposGenerateSessionKeysResult:(NSDictionary *)result;
 -(void)onDoSetRsaPublicKey:(BOOL)result;
--(void)onRequestCvmApp:(NSDictionary *)dataArr;
+-(void)onReturnSetConnectedShutDownTimeResult:(BOOL)isSuccess;
+-(void)onReturnGetConnectedShutDownTimeResult:(NSString *)time;
+-(void)onReturnUpdateKeyByTR_31Result:(BOOL)result;
+-(void)onReturnGetEncryptDataResult:(NSDictionary*)tlv;
+-(void)onReturnBatchSendAPDUResult:(NSDictionary *)apduResponses;
+-(void)onReturnPowerOnFelicaResult:(FelicaStatusCode)result;
+-(void)onReturnPowerOffFelicaResult:(FelicaStatusCode)result;
+-(void)onReturnSendApduFelicaResult:(FelicaStatusCode)result responseLen:(NSString *)responseLen responseData:(NSString *)responseData;
 @end
 
 @interface QPOSService : NSObject
@@ -318,6 +350,19 @@ trackipekCheckValue:(NSString *)trackipekCheckValue
             pinipek:(NSString *)pinipek
   pinipekcheckValue:(NSString *)pinipekcheckValue
               block:(void(^)(BOOL isSuccess,NSString *stateStr))EMVBlock;
+
+- (void)updateIPEKOperationByKeyType:(NSString *)groupKey
+                     tracksn:(NSString *)trackksn
+                   trackipek:(NSString *)trackipek
+         trackipekCheckValue:(NSString *)trackipekCheckValue
+                      emvksn:(NSString *)emvksn
+                     emvipek:(NSString *)emvipek
+           emvipekcheckvalue:(NSString *)emvipekcheckvalue
+                      pinksn:(NSString *)pinksn
+                     pinipek:(NSString *)pinipek
+           pinipekcheckValue:(NSString *)pinipekcheckValue
+                       block:(void(^)(BOOL isSuccess,NSString *stateStr))EMVBlock;
+
 //buzzer
 -(void)doSetBuzzerOperation:(NSInteger)timeOut
                       block:(void (^)(BOOL isSuccess, NSString*stateStr))buzzerBlock;
@@ -360,6 +405,7 @@ trackipekCheckValue:(NSString *)trackipekCheckValue
 //you can set DoTradeMode before calling doTrade.
 -(void)setDoTradeMode:(DoTradeMode)doTradeMode;
 -(void)setFormatID:(NSString *)formatID;
+-(void)setAmountPoint:(BOOL)amoutPoint;
 -(void)startAudio;
 -(void)stopAudio;
 //start trade api
@@ -369,6 +415,8 @@ trackipekCheckValue:(NSString *)trackipekCheckValue
 -(void)doCheckCard;
 -(void)doCheckCard:(NSInteger) timeout;
 -(void)doCheckCard:(NSInteger) timeout keyIndex:(NSInteger) mKeyIndex;
+-(void)doTrade_QF:(NSInteger)tradeMode TradeRandomString:(NSString *)randomString TradeExtraString:(NSString *)extraString;
+-(void)doTrade_QF:(NSInteger)tradeMode TradeRandomString:(NSString *)randomString TradeExtraString:(NSString *)extraString timeout:(NSInteger) delay;
 //open quick emv
 -(void)setIsQuickEMV:(BOOL)isQuickEMV;
 -(BOOL)getQuickEMV;
@@ -392,6 +440,14 @@ trackipekCheckValue:(NSString *)trackipekCheckValue
 //get pos infomation
 -(void)getQPosInfo;
 -(void)getQPosId;
+//add icc apdu 2014-03-11
+-(void)powerOffIcc;
+-(void)powerOnIcc;
+-(void)sendApdu:(NSString *)apduStr;
+//nfc
+-(void)powerOffNFC:(NSInteger) timeout withBlock:(void (^)(BOOL isSuccess))onPowerOffNFCResultBlock;
+-(void)sendApduByNFC:(NSString *)apduString delay:(NSInteger)timeout withBlock:(void (^)(BOOL isSuccess, NSString *apdu, NSInteger apduLen))onNFCApduResultBlock;
+-(void)powerOnNFC:(NSInteger) isEncrypt delay:(NSInteger) timeout withBlock:(void (^)(BOOL isSuccess, NSString *ksn, NSString *atr, NSInteger atrLen))onPowerOnNFCResultBlock;
 
 -(void)sendPinEntryResult:(NSString *)pin;
 -(void)cancelPinEntry;
@@ -414,6 +470,7 @@ trackipekCheckValue:(NSString *)trackipekCheckValue
 -(void)updateEmvAPP:(NSInteger )operationType data:(NSArray*)data  block:(void (^)(BOOL isSuccess, NSString *stateStr))updateEMVAPPBlock;
 
 //update workkey api
+-(void)udpateWorkKey:(NSString *)updateKey;
 -(void)udpateWorkKey:(NSString *)pik pinKeyCheck:(NSString *)pikCheck trackKey:(NSString *)trk trackKeyCheck:(NSString *)trkCheck macKey:(NSString *)mak macKeyCheck:(NSString *)makCheck;
 -(void)udpateWorkKey:(NSString *)workKey workKeyCheckValue:(NSString *)workKeyCheck;
 -(void)udpateWorkKey:(NSString *)workKey workKeyCheckValue:(NSString *)workKeyCheck keyIndex:(int)keyIndex timeout:(int)timeout;
@@ -450,6 +507,10 @@ trackipekCheckValue:(NSString *)trackipekCheckValue
 
 -(void)isCardExist:(NSInteger)timeout withResultBlock:(void (^)(BOOL))isCardExistBlock;
 -(void)isCardExistInOnlineProcess:(NSInteger)timeout withResultBlock:(void (^)(BOOL))isCardExistBlock;
+-(void)cbc_mac_cn_all:(NSInteger)keyLen atype:(NSInteger)algorithmType otype:(NSInteger)operatorType data:(NSString *)dataStr delay:(NSInteger)timeout withResultBlock:(void (^)(NSString *))cbcmacBlock;
+-(void)getKsn:(void(^)(BOOL isSuccess,NSDictionary *dict))getKsnBlock;
+-(void)getIccCardNo: (NSString *)aterminalTime;
+-(void)iccCashBack:(NSString *)transactionTime random:(NSString *)aRandom;
 #pragma mark init emv app
 -(NSMutableDictionary *)getEMVAPPDict;
 #pragma mark init emv capk
@@ -461,8 +522,25 @@ trackipekCheckValue:(NSString *)trackipekCheckValue
 -(void)getShutDownTime;
 -(void)setPanStatus:(NSInteger )panStatus;
 -(void)getDevicePublicKey:(NSInteger)timeout;
--(void)generateSessionKeys:(SessionKeyType)keyType;
--(void)updateRSA:(NSString *)pemFile;
--(void)sendCvmPin:(NSString *)pin isEncrypted:(BOOL)isEncrypted;
+-(void)setShutDownTimeOnConnected:(NSInteger)time;
+-(void)getShutDownTimeOnConnected;
+-(NSInteger)getCvmPinTryLimit;
+-(void)updateKeyByTR_31:(NSInteger)keyIndex keyBlock:(NSString *)keyBlock;
+-(void)updateKeyByTR_31:(NSInteger)keyIndex keyBlock:(NSString *)keyBlock timeout:(NSInteger)timeout;
+-(void)generateSessionKeys;
+-(void)updateRSA:(NSString *)publicKey pemFile:(NSString *)pemFile;
+-(void)getEncryptData:(NSData *)data keyType:(NSString*)keyType keyIndex:(NSString *)keyIndex timeOut:(NSInteger)timeout;
+-(void)getMPUCardInfo:(MPUInfoBlock)mpuInfoBlock;
+-(void)getMIccCardData:(NSString *)transactionTime;
+-(void)updateKeyByTR_31VersionD:(NSInteger)keyIndex ksn:(NSString *)ksn keyBlock:(NSString *)keyBlock;
+-(void)powerOnFelica:(NSInteger)timeout;
+-(void)powerOffFelica:(NSInteger)timeout;
+-(void)sendApduByFelica:(NSString *)apduString timeout:(NSInteger)timeout;
+-(void)generateTransportKey:(NSInteger)timeout dataBlock:(void(^)(NSDictionary *))dataBlock;
+-(void)updateIPEKByTransportKey:(NSString *)groupKey tracksn:(NSString *)trackksn trackipek:(NSString *)trackipek trackipekCheckValue:(NSString *)trackipekCheckValue emvksn:(NSString *)emvksn emvipek:(NSString *)emvipek emvipekcheckvalue:(NSString *)emvipekcheckvalue pinksn:(NSString *)pinksn pinipek:(NSString *)pinipek pinipekcheckValue:(NSString *)pinipekcheckValue block:(void(^)(BOOL isSuccess))resultBlock;
+-(void)updateWorkKeyByTransportKey:(NSString *)pik pinKeyCheck:(NSString *)pikCheck trackKey:(NSString *)trk trackKeyCheck:(NSString *)trkCheck macKey:(NSString *)mak macKeyCheck:(NSString *)makCheck keyIndex:(NSInteger) mKeyIndex timeout:(NSInteger)timeout block:(void(^)(BOOL isSuccess))resultBlock;
+-(void)sendCVV:(NSString *)cvvStr resultBlock:(void(^)(BOOL))resultBlock;
+-(void)getEncryptedDataBlock:(NSInteger)keyIndex dataBlock:(void(^)(NSDictionary *))dataBlock;
+
 @end
 
