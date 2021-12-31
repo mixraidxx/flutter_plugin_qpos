@@ -24,6 +24,7 @@
     dispatch_queue_t self_queue;
     NSString *msgStr;
     NSTimer* appearTimer;
+    FlutterResult resultFlutter;
 
 }
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
@@ -38,6 +39,9 @@
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
   NSLog(@"method: %@-----arguments: %@----result: %@",call.method, call.arguments, result);
+    if (resultFlutter == nil) {
+        resultFlutter = result;
+    }
   if ([@"getPosSdkVersion" isEqualToString:call.method]) {
     result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
   }else if ([@"initPos" isEqualToString:call.method]) {
@@ -137,18 +141,15 @@
          
       }];
   }else if ([@"updateRSA" isEqualToString:call.method]){
-      
-      @try {
           NSLog(@"Actualiza llave rsa");
           NSString *rsaName = [call.arguments objectForKey:@"rsaName"];
           NSString *fileName =[NSString stringWithFormat:@"%@.pem", rsaName];
-          NSString *pemStr = [QPOSUtil asciiFormatString: [self readLine:fileName]];
+          NSString *pemStr = [QPOSUtil asciiFormatString: [self readLine:rsaName]];
+          NSLog(@"RSAName: %@", rsaName);
+          NSLog(@"FileName: %@", fileName);
           NSLog(@"pemStr: %@", pemStr);
           [self.mPos updateRSA:pemStr pemFile:fileName];
-          result(@(TRUE));
-      } @catch (NSException *exception) {
-          result(@(FALSE));
-      }
+     
      
   }else if ([@"sendCvv" isEqualToString:call.method]) {
       NSLog(@"SendCVV");
@@ -753,6 +754,7 @@
     NSString* binFile = [[NSBundle mainBundle]pathForResource:name ofType:@".bin"];
     NSString* ascFile = [[NSBundle mainBundle]pathForResource:name ofType:@".asc"];
     NSString* xmlFile = [[NSBundle mainBundle]pathForResource:name ofType:@".xml"];
+    NSString* pemFile = [[NSBundle mainBundle]pathForResource:name ofType:@".pem"];
     if (binFile!= nil && ![binFile isEqualToString: @""]) {
         NSFileManager* Manager = [NSFileManager defaultManager];
         NSData* data1 = [[NSData alloc] init];
@@ -762,12 +764,17 @@
         NSFileManager* Manager = [NSFileManager defaultManager];
         NSData* data2 = [[NSData alloc] init];
         data2 = [Manager contentsAtPath:ascFile];
-        //NSLog(@"----------");
         return data2;
     }else if (xmlFile!= nil && ![xmlFile isEqualToString: @""]){
         NSFileManager* Manager = [NSFileManager defaultManager];
         NSData* data2 = [[NSData alloc] init];
         data2 = [Manager contentsAtPath:xmlFile];
+        return data2;
+    }else if (pemFile!= nil && ![pemFile isEqualToString: @""]){
+        NSFileManager* Manager = [NSFileManager defaultManager];
+        NSData* data2 = [[NSData alloc] init];
+        data2 = [Manager contentsAtPath:pemFile];
+        NSLog(@"pemFile: %@", pemFile);
         return data2;
     }
     return nil;
@@ -813,6 +820,11 @@
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         return jsonString;
     }
+}
+
+- (void)onDoSetRsaPublicKey:(BOOL)result{
+    NSLog(@"onDoSetRsaPublicKey: %d", result);
+    resultFlutter(@(result));
 }
 
 @end
