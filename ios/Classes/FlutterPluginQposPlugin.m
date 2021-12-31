@@ -137,7 +137,19 @@
          
       }];
   }else if ([@"updateRSA" isEqualToString:call.method]){
-      NSLog(@"Actualiza llave rsa");
+      
+      @try {
+          NSLog(@"Actualiza llave rsa");
+          NSString *rsaName = [call.arguments objectForKey:@"rsaName"];
+          NSString *fileName =[NSString stringWithFormat:@"%@.pem", rsaName];
+          NSString *pemStr = [QPOSUtil asciiFormatString: [self readLine:fileName]];
+          NSLog(@"pemStr: %@", pemStr);
+          [self.mPos updateRSA:pemStr pemFile:fileName];
+          result(@(TRUE));
+      } @catch (NSException *exception) {
+          result(@(FALSE));
+      }
+     
   }else if ([@"sendCvv" isEqualToString:call.method]) {
       NSLog(@"SendCVV");
       NSString *cvv = [call.arguments objectForKey:@"cvv"];
