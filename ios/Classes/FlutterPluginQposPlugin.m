@@ -149,8 +149,6 @@
           NSLog(@"FileName: %@", fileName);
           NSLog(@"pemStr: %@", pemStr);
           [self.mPos updateRSA:pemStr pemFile:fileName];
-     
-     
   }else if ([@"sendCvv" isEqualToString:call.method]) {
       NSLog(@"SendCVV");
       NSString *cvv = [call.arguments objectForKey:@"cvv"];
@@ -751,10 +749,12 @@
 }
 
 - (NSData*)readLine:(NSString*)name{
+    NSLog(@"entra en readline");
     NSString* binFile = [[NSBundle mainBundle]pathForResource:name ofType:@".bin"];
     NSString* ascFile = [[NSBundle mainBundle]pathForResource:name ofType:@".asc"];
     NSString* xmlFile = [[NSBundle mainBundle]pathForResource:name ofType:@".xml"];
     NSString* pemFile = [[NSBundle mainBundle]pathForResource:name ofType:@".pem"];
+    NSLog(@"pemFile: %@",pemFile);
     if (binFile!= nil && ![binFile isEqualToString: @""]) {
         NSFileManager* Manager = [NSFileManager defaultManager];
         NSData* data1 = [[NSData alloc] init];
