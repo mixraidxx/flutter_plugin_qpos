@@ -14,6 +14,9 @@
 @property (nonatomic,copy)NSString *bluetoothAddress;
 @end
 
+NSString *publicProd;
+NSString *rsaPublic;
+
 @implementation FlutterPluginQposPlugin{
     NSMutableArray *allBluetooth;
     NSString *btAddress;
@@ -25,6 +28,7 @@
     NSString *msgStr;
     NSTimer* appearTimer;
     FlutterResult resultFlutter;
+    
 
 }
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
@@ -35,6 +39,11 @@
   FlutterEventChannel *eventChannel = [FlutterEventChannel eventChannelWithName:@"flutter_plugin_pos_event" binaryMessenger:[registrar messenger]];
   [eventChannel setStreamHandler:instance];
   [registrar addMethodCallDelegate:instance channel:channel];
+     publicProd = [registrar lookupKeyForAsset:@"assets/public_prod.pem"];
+    rsaPublic = [registrar lookupKeyForAsset:@"assets/rsa_public_2048.pem"];
+//    NSString* path = [[NSBundle mainBundle] pathForResource:key ofType:nil];
+    
+
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
@@ -750,34 +759,52 @@
 
 - (NSData*)readLine:(NSString*)name{
     NSLog(@"entra en readline");
-    NSString* binFile = [[NSBundle mainBundle]pathForResource:name ofType:@".bin"];
-    NSString* ascFile = [[NSBundle mainBundle]pathForResource:name ofType:@".asc"];
-    NSString* xmlFile = [[NSBundle mainBundle]pathForResource:name ofType:@".xml"];
-    NSString* pemFile = [[NSBundle mainBundle]pathForResource:name ofType:@".pem"];
-    NSLog(@"pemFile: %@",pemFile);
-    if (binFile!= nil && ![binFile isEqualToString: @""]) {
+    NSString* fileName;
+    if ([name  isEqual: @"public_prod"]) {
+        fileName = publicProd;
+    } else {
+        fileName = rsaPublic;
+    }
+    
+    NSString* pemFile = [[NSBundle mainBundle]pathForResource:fileName ofType:nil];
+    NSLog(@"pemFile: %@", pemFile);
+    if (pemFile != nil && ![pemFile isEqualToString:@""]) {
         NSFileManager* Manager = [NSFileManager defaultManager];
-        NSData* data1 = [[NSData alloc] init];
-        data1 = [Manager contentsAtPath:binFile];
-        return data1;
-    }else if (ascFile!= nil && ![ascFile isEqualToString: @""]){
-        NSFileManager* Manager = [NSFileManager defaultManager];
-        NSData* data2 = [[NSData alloc] init];
-        data2 = [Manager contentsAtPath:ascFile];
-        return data2;
-    }else if (xmlFile!= nil && ![xmlFile isEqualToString: @""]){
-        NSFileManager* Manager = [NSFileManager defaultManager];
-        NSData* data2 = [[NSData alloc] init];
-        data2 = [Manager contentsAtPath:xmlFile];
-        return data2;
-    }else if (pemFile!= nil && ![pemFile isEqualToString: @""]){
-        NSFileManager* Manager = [NSFileManager defaultManager];
-        NSData* data2 = [[NSData alloc] init];
-        data2 = [Manager contentsAtPath:pemFile];
-        NSLog(@"pemFile: %@", pemFile);
-        return data2;
+        NSData* data = [[NSData alloc]init];
+        data = [Manager contentsAtPath:pemFile];
+        return data;
     }
     return nil;
+//    NSString* binFile = [[NSBundle mainBundle]pathForResource:name ofType:@".bin"];
+//    NSString* ascFile = [[NSBundle mainBundle]pathForResource:name ofType:@".asc"];
+//    NSString* xmlFile = [[NSBundle mainBundle]pathForResource:name ofType:@".xml"];
+//    NSString* pemFile = [[NSBundle mainBundle]pathForResource:name ofType:@".pem"];
+//
+//
+//    NSLog(@"pemFile: %@",pemFile);
+//    if (binFile!= nil && ![binFile isEqualToString: @""]) {
+//        NSFileManager* Manager = [NSFileManager defaultManager];
+//        NSData* data1 = [[NSData alloc] init];
+//        data1 = [Manager contentsAtPath:binFile];
+//        return data1;
+//    }else if (ascFile!= nil && ![ascFile isEqualToString: @""]){
+//        NSFileManager* Manager = [NSFileManager defaultManager];
+//        NSData* data2 = [[NSData alloc] init];
+//        data2 = [Manager contentsAtPath:ascFile];
+//        return data2;
+//    }else if (xmlFile!= nil && ![xmlFile isEqualToString: @""]){
+//        NSFileManager* Manager = [NSFileManager defaultManager];
+//        NSData* data2 = [[NSData alloc] init];
+//        data2 = [Manager contentsAtPath:xmlFile];
+//        return data2;
+//    }else if (pemFile!= nil && ![pemFile isEqualToString: @""]){
+//        NSFileManager* Manager = [NSFileManager defaultManager];
+//        NSData* data2 = [[NSData alloc] init];
+//        data2 = [Manager contentsAtPath:pemFile];
+//        NSLog(@"pemFile: %@", pemFile);
+//        return data2;
+//    }
+//    return nil;
 }
 
 - (NSString *)convertToJsonData:(NSDictionary *)dict
