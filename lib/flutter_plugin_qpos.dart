@@ -284,6 +284,7 @@ class FlutterPluginQpos {
     Map<String, String> params = Map<String, String>();
     params['rsaName'] = rsaFilename;
     final result = await _methodChannel.invokeMethod("updateRSA", params);
+    print("Update RSA Result: $result");
     return result;
   }
 
