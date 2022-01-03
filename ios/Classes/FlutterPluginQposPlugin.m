@@ -850,17 +850,10 @@ NSString *rsaPublic;
 - (void)onDoSetRsaPublicKey:(BOOL)result{
     NSLog(@"Entra en resultado de setRSA");
     NSLog(@"onDoSetRsaPublicKey: %d", result);
-    resultFlutter(@"Resultado de onDoSetRsaPublic");
-    NSDictionary *jsonDict = @{@"success" : [NSNumber numberWithBool:result]};
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDict
-                                                       options:NSJSONWritingPrettyPrinted
-                                                         error:&error];
-    if(! jsonData) {
-        NSLog(@"Ocurrio un error");
+    if(result){
+        [self sendMessage:@"onQposDoSetRsaPublicKey" parameter:"true"];
     } else {
-        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        [self sendMessage:@"onQposDoSetRsaPublicKey" parameter:jsonString];
+        [self sendMessage:@"onQposDoSetRsaPublicKey" parameter:"false"];
     }
 }
 
