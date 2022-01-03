@@ -1,6 +1,6 @@
 name: flutter_plugin_qpos
 description: Libreria de mpos DSpread qpos cute.
-version: 1.2.9
+version: 1.2.90
 homepage: "https://gitlab.com/dspread/flutter_demo/-/tree/master/flutter_plugin_qpos"
 
 environment:

@@ -41,14 +41,12 @@ NSString *rsaPublic;
   [registrar addMethodCallDelegate:instance channel:channel];
      publicProd = [registrar lookupKeyForAsset:@"assets/public_prod.pem"];
     rsaPublic = [registrar lookupKeyForAsset:@"assets/rsa_public_2048.pem"];
-//    NSString* path = [[NSBundle mainBundle] pathForResource:key ofType:nil];
-    
-
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
   NSLog(@"method: %@-----arguments: %@----result: %@",call.method, call.arguments, result);
     if (resultFlutter == nil) {
+        NSLog(@"inicia resultFlutter");
         resultFlutter = result;
     }
   if ([@"getPosSdkVersion" isEqualToString:call.method]) {
@@ -852,7 +850,6 @@ NSString *rsaPublic;
 - (void)onDoSetRsaPublicKey:(BOOL)result{
     NSLog(@"Entra en resultado de setRSA");
     NSLog(@"onDoSetRsaPublicKey: %d", result);
-    resultFlutter(@(result));
 }
 
 @end
