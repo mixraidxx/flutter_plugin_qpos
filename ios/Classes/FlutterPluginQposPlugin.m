@@ -850,6 +850,7 @@ NSString *rsaPublic;
 - (void)onDoSetRsaPublicKey:(BOOL)result{
     NSLog(@"Entra en resultado de setRSA");
     NSLog(@"onDoSetRsaPublicKey: %d", result);
+    resultFlutter(@"Resultado de onDoSetRsaPublic");
 }
 
 @end
