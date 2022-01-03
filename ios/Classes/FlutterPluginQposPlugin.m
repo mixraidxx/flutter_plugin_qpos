@@ -223,7 +223,10 @@ NSString *rsaPublic;
               [self sendMessage:@"onReturnUpdateEMVResult" parameter:@"false"];
           }
       }];
-  }else {
+  }else if([@"doCheckCard" isEqualToString:call.method]){
+      NSLog(@"doCheckCard");
+      [self.mPos doCheckCard];
+  } else{
       result(FlutterMethodNotImplemented);
   }
 }
