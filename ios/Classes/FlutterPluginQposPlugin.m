@@ -210,6 +210,19 @@ NSString *rsaPublic;
           }
          
       }];
+  }else if([@"updateEmvApp" isEqualToString:call.method]){
+      NSMutableArray *capkTempArr = [NSMutableArray array];
+      NSString *capkStr1 = [NSString stringWithFormat:@"DF21%@",@"000000000000"];
+      [capkTempArr addObject:capkStr1];
+      [self.mPos updateEmvAPP:EMVOperation_update data:capkTempArr.copy block:^(BOOL isSuccess, NSString *stateStr) {
+          if (isSuccess) {
+              NSLog(@"Se actulizaron correctamente los tags");
+              [self sendMessage:@"onReturnUpdateEMVResult" parameter:@"true"];
+          } else {
+              NSLog(@"Ocurrio un error: %@", stateStr);
+              [self sendMessage:@"onReturnUpdateEMVResult" parameter:@"false"];
+          }
+      }];
   }else {
       result(FlutterMethodNotImplemented);
   }
