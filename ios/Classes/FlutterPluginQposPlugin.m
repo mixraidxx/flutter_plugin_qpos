@@ -851,9 +851,9 @@ NSString *rsaPublic;
     NSLog(@"Entra en resultado de setRSA");
     NSLog(@"onDoSetRsaPublicKey: %d", result);
     if(result){
-        [self sendMessage:@"onQposDoSetRsaPublicKey" parameter:"true"];
+        [self sendMessage:@"onQposDoSetRsaPublicKey" parameter:@"true"];
     } else {
-        [self sendMessage:@"onQposDoSetRsaPublicKey" parameter:"false"];
+        [self sendMessage:@"onQposDoSetRsaPublicKey" parameter:@"false"];
     }
 }
 
