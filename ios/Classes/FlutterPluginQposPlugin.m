@@ -860,7 +860,7 @@ NSString *rsaPublic;
         NSLog(@"Ocurrio un error");
     } else {
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        [self sendMessage:@"onDoSetRsaPublicKey" parameter:jsonString];
+        [self sendMessage:@"onQposDoSetRsaPublicKey" parameter:jsonString];
     }
 }
 
