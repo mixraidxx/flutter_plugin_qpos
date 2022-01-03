@@ -203,7 +203,12 @@ NSString *rsaPublic;
       NSInteger index = 0;
       NSInteger timeout = 30;
       [self.mPos updateWorkKeyByTransportKey:key pinKeyCheck:cvk trackKey:key trackKeyCheck:cvk macKey:key macKeyCheck:cvk keyIndex:index timeout:timeout block:^(BOOL isSuccess) {
-          result(@(isSuccess));
+          if (isSuccess) {
+              [self sendMessage:@"onRequestUpdateWorkKeyResult" parameter:@"true"];
+          } else {
+              [self sendMessage:@"onRequestUpdateWorkKeyResult" parameter:@"false"];
+          }
+         
       }];
   }else {
       result(FlutterMethodNotImplemented);
