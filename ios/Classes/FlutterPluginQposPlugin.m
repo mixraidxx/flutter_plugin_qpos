@@ -188,16 +188,18 @@ NSString *rsaPublic;
       } else {
           iscipher = EncryptType_plaintext;
       }
-      NSError *error;
+//      NSError *error;
       NSDictionary *data =  [self.mPos getICCTag:iscipher tagCount:tagcounter.integerValue tagArrStr:tagString];
-      NSLog(@"resultado de geticcTAG: %@",data);
-      NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:&error];
-      if (!jsonData) {
-          NSLog(@"Got an error: %@",error);
-      } else {
-          NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-          result(jsonString);
-      }
+      NSString *tlv = [data objectForKey:@"tlv"];
+      NSLog(@"resultado de geticcTAG: %@",tlv);
+      result(tlv);
+//      NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:&error];
+//      if (!jsonData) {
+//          NSLog(@"Got an error: %@",error);
+//      } else {
+//          NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//          result(jsonString);
+//      }
   }else if([@"updateWorkKeyByTransportKey" isEqualToString:call.method]) {
       NSString *key = [call.arguments objectForKey:@"key"];
       NSString *cvk = [call.arguments objectForKey:@"cvk"];
