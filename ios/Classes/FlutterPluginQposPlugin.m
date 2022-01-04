@@ -190,6 +190,7 @@ NSString *rsaPublic;
       }
       NSError *error;
       NSDictionary *data =  [self.mPos getICCTag:iscipher tagCount:tagcounter.integerValue tagArrStr:tagString];
+      NSLog(@"resultado de geticcTAG: %@",data);
       NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:&error];
       if (!jsonData) {
           NSLog(@"Got an error: %@",error);
@@ -226,7 +227,11 @@ NSString *rsaPublic;
   }else if([@"doCheckCard" isEqualToString:call.method]){
       NSLog(@"doCheckCard");
       [self.mPos doCheckCard];
-  } else{
+  } else if([@"cancelTrade" isEqualToString:call.method]) {
+      NSLog(@"CancelTrade");
+      [self.mPos cancelTrade:YES];
+  }
+  else{
       result(FlutterMethodNotImplemented);
   }
 }
@@ -877,5 +882,7 @@ NSString *rsaPublic;
         [self sendMessage:@"onQposDoSetRsaPublicKey" parameter:@"false"];
     }
 }
+
+
 
 @end
