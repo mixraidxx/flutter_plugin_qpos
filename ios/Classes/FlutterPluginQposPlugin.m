@@ -866,8 +866,13 @@ NSString *rsaPublic;
     for (TLV *tlv in dict ) {
         NSLog(@"Tag: %@ value: %@", tlv.tag,tlv.value);
     }
+    NSMutableArray *tagArray = [NSMutableArray array];
+    for(TLV *tlv in dict) {
+        NSDictionary *tlvdict = [self dictionaryRepresentation:tlv];
+        [tagArray addObject:tlvdict];
+    }
     NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:tagArray options:NSJSONWritingPrettyPrinted error:&error];
     if (!jsonData) {
         NSLog(@"Got an error: %@", error);
         return nil;
@@ -897,6 +902,13 @@ NSString *rsaPublic;
     } else {
         [self sendMessage:@"onQposDoSetRsaPublicKey" parameter:@"false"];
     }
+}
+
+- (NSDictionary *)dictionaryRepresentation:(TLV*)tlv{
+    NSMutableDictionary *mutableDict = [NSMutableDictionary dictionary];
+    [mutableDict setValue:tlv.tag forKey:@"tag"];
+    [mutableDict setValue:tlv.value forKey:@"value"];
+    return [NSDictionary dictionaryWithDictionary:mutableDict];
 }
 
 
