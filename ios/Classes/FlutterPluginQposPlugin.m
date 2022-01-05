@@ -1,5 +1,6 @@
 #import "FlutterPluginQposPlugin.h"
 #import "SGTLVDecode.h"
+#import "TLVParser.h"
 
 @interface FlutterPluginQposPlugin()
 @property (nonatomic, strong)FlutterEventChannel *eventChannel;
@@ -861,18 +862,31 @@ NSString *rsaPublic;
 }
 
 - (NSString *)parseDecoder:(NSString *) tlv {
-    NSDictionary *value = [SGTLVDecode decodeWithString:tlv];
+    NSArray *dict = [TLVParser parse:tlv];
+    for (TLV *tlv in dict ) {
+        NSLog(@"Tag: %@ value: %@", tlv.tag,tlv.value);
+    }
     NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:value
-                                                       options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
-                                                         error:&error];
-    if (! jsonData) {
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
+    if (!jsonData) {
         NSLog(@"Got an error: %@", error);
         return nil;
     } else {
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         return jsonString;
     }
+  //  NSDictionary *value = [SGTLVDecode decodeWithString:tlv];
+  //  NSError *error;
+  //  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:value
+    //                                                   options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
+                                                         //error:&error];
+    //if (! jsonData) {
+     //   NSLog(@"Got an error: %@", error);
+      //  return nil;
+    //} else {
+     //   NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+       // return jsonString;
+    //}
 }
 
 - (void)onDoSetRsaPublicKey:(BOOL)result{
