@@ -103,8 +103,9 @@ NSString *rsaPublic;
       NSInteger position = [[call.arguments objectForKey:@"position"] integerValue];
       [self.mPos selectEmvApp:position];
   }else if ([@"sendOnlineProcessResult" isEqualToString:call.method]) {
-      NSString *onlineProcessResult = [call.arguments objectForKey:@"onlineProcessResult"];
-      [self.mPos sendOnlineProcessResult:onlineProcessResult];
+      NSString *processResult = [call.arguments objectForKey:@"onlineProcessResult"];
+      NSLog(@"sendOnlineProcessResult: %@",processResult);
+      [self.mPos sendOnlineProcessResult:processResult];
   }else if ([@"stopScanQPos2Mode" isEqualToString:call.method]) {
       [self.bt stopQPos2Mode];
   }else if ([@"scanQPos2Mode" isEqualToString:call.method]) {
@@ -549,49 +550,63 @@ NSString *rsaPublic;
 
 -(void) onRequestTransactionResult: (TransactionResult)transactionResult{
     NSString *messageTextView = @"";
-    if (transactionResult==TransactionResult_APPROVED) {
-        NSString *message = [NSString stringWithFormat:@"Approved\nAmount: $%@\n",self.inputAmount];
-        if([self.cashbackAmount isEqualToString:@""]) {
-            message = [message stringByAppendingString:@"Cashback: $"];
-            message = [message stringByAppendingString:self.cashbackAmount];
-        }
-        messageTextView = message;
-    }else if(transactionResult == TransactionResult_TERMINATED) {
-        messageTextView = @"Terminated";
-    } else if(transactionResult == TransactionResult_DECLINED) {
-        messageTextView = @"Declined";
-    } else if(transactionResult == TransactionResult_CANCEL) {
-        messageTextView = @"Cancel";
-    } else if(transactionResult == TransactionResult_CAPK_FAIL) {
-        messageTextView = @"Fail (CAPK fail)";
-    } else if(transactionResult == TransactionResult_NOT_ICC) {
-        messageTextView = @"Fail (Not ICC card)";
-    } else if(transactionResult == TransactionResult_SELECT_APP_FAIL) {
-        messageTextView = @"Fail (App fail)";
-    } else if(transactionResult == TransactionResult_DEVICE_ERROR) {
-        messageTextView = @"Pos Error";
-    } else if(transactionResult == TransactionResult_CARD_NOT_SUPPORTED) {
-        messageTextView = @"Card not support";
-    } else if(transactionResult == TransactionResult_MISSING_MANDATORY_DATA) {
-        messageTextView = @"Missing mandatory data";
-    } else if(transactionResult == TransactionResult_CARD_BLOCKED_OR_NO_EMV_APPS) {
-        messageTextView = @"Card blocked or no EMV apps";
-    } else if(transactionResult == TransactionResult_INVALID_ICC_DATA) {
-        messageTextView = @"Invalid ICC data";
-    }else if(transactionResult == TransactionResult_NFC_TERMINATED) {
-        messageTextView = @"NFC Terminated";
+    switch (transactionResult) {
+        case TransactionResult_CANCEL:
+            messageTextView = @"CANCEL";
+            break;
+        case TransactionResult_APPROVED:
+            messageTextView = @"APPROVED";
+            break;
+        case TransactionResult_TERMINATED:
+            messageTextView = @"TERMINATED";
+            break;
+        default:
+            break;
     }
-    NSString *displayStr = messageTextView;
-    mAlertView = [[UIAlertView new]
-                  initWithTitle:@"Transaction Result"
-                  message:messageTextView
-                  delegate:self
-                  cancelButtonTitle:@"Confirm"
-                  otherButtonTitles:nil,
-                  nil ];
-    [mAlertView show];
-    self.inputAmount = @"";
-    self.cashbackAmount = @"";
+    NSLog(@"On RequestTransactionResult: %@", messageTextView);
+  //  if (transactionResult==TransactionResult_APPROVED) {
+  //      NSString *message = [NSString stringWithFormat:@"Approved\nAmount: $%@\n",self.inputAmount];
+  //      if([self.cashbackAmount isEqualToString:@""]) {
+  //           message = [message stringByAppendingString:@"Cashback: $"];
+    //           message = [message stringByAppendingString:self.cashbackAmount];
+    //    }
+    //       messageTextView = message;
+    // }else if(transactionResult == TransactionResult_TERMINATED) {
+    //   messageTextView = @"Terminated";
+    // } else if(transactionResult == TransactionResult_DECLINED) {
+    //       messageTextView = @"Declined";
+    //   } else if(transactionResult == TransactionResult_CANCEL) {
+    //       messageTextView = @"Cancel";
+    //    } else if(transactionResult == TransactionResult_CAPK_FAIL) {
+    //        messageTextView = @"Fail (CAPK fail)";
+    //   } else if(transactionResult == TransactionResult_NOT_ICC) {
+    //        messageTextView = @"Fail (Not ICC card)";
+    //    } else if(transactionResult == TransactionResult_SELECT_APP_FAIL) {
+    //       messageTextView = @"Fail (App fail)";
+    //    } else if(transactionResult == TransactionResult_DEVICE_ERROR) {
+    //        messageTextView = @"Pos Error";
+    //   } else if(transactionResult == TransactionResult_CARD_NOT_SUPPORTED) {
+    //      messageTextView = @"Card not support";
+    //  } else if(transactionResult == TransactionResult_MISSING_MANDATORY_DATA) {
+    //       messageTextView = @"Missing mandatory data";
+    //   } else if(transactionResult == TransactionResult_CARD_BLOCKED_OR_NO_EMV_APPS) {
+    //       messageTextView = @"Card blocked or no EMV apps";
+    //   } else if(transactionResult == TransactionResult_INVALID_ICC_DATA) {
+    //       messageTextView = @"Invalid ICC data";
+    //   }else if(transactionResult == TransactionResult_NFC_TERMINATED) {
+    //      messageTextView = @"NFC Terminated";
+    //  }
+    //  NSString *displayStr = messageTextView;
+    //  mAlertView = [[UIAlertView new]
+    //                initWithTitle:@"Transaction Result"
+    //               message:messageTextView
+    //               delegate:self
+    //               cancelButtonTitle:@"Confirm"
+    //              otherButtonTitles:nil,
+    //               nil ];
+    // [mAlertView show];
+    //self.inputAmount = @"";
+    //self.cashbackAmount = @"";
     [self sendMessage:@"onRequestTransactionResult" parameter:messageTextView];
 }
 
