@@ -230,7 +230,8 @@ NSString *rsaPublic;
       }];
   }else if([@"doCheckCard" isEqualToString:call.method]){
       NSLog(@"doCheckCard");
-      [self.mPos doCheckCard];
+      [self.mPos setCardTradeMode:CardTradeMode_SWIPE_INSERT_CARD];
+      [self.mPos doCheckCard:30];
   } else if([@"cancelTrade" isEqualToString:call.method]) {
       NSLog(@"CancelTrade");
       [self.mPos cancelTrade:YES];
