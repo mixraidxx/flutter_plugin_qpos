@@ -105,7 +105,7 @@ NSString *rsaPublic;
   }else if ([@"sendOnlineProcessResult" isEqualToString:call.method]) {
       NSString *processResult = [call.arguments objectForKey:@"onlineProcessResult"];
       NSLog(@"sendOnlineProcessResult: %@",processResult);
-      [self.mPos sendOnlineProcessResult:processResult];
+      [self.mPos sendOnlineProcessResult:@"8A023030"];
   }else if ([@"stopScanQPos2Mode" isEqualToString:call.method]) {
       [self.bt stopQPos2Mode];
   }else if ([@"scanQPos2Mode" isEqualToString:call.method]) {
