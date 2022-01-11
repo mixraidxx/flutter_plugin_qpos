@@ -79,7 +79,7 @@ NSString *rsaPublic;
       NSString *currencyCode = [call.arguments objectForKey:@"currencyCode"];
       NSInteger transactionType = [[call.arguments objectForKey:@"transactionType"] integerValue];
       self.inputAmount = amount;
-      [self.mPos setAmount:amount aAmountDescribe:cashbackAmount currency:currencyCode transactionType:transactionType];
+      [self.mPos setAmount:amount aAmountDescribe:cashbackAmount currency:currencyCode transactionType:mTransType];
   } else if ([@"doEmvApp" isEqualToString:call.method]) {
       [self.mPos doEmvApp:EmvOption_START];
   } else if ([@"sendTime" isEqualToString:call.method]) {
@@ -234,7 +234,7 @@ NSString *rsaPublic;
       [self.mPos doCheckCard:30];
   } else if([@"cancelTrade" isEqualToString:call.method]) {
       NSLog(@"CancelTrade");
-      [self.mPos cancelTrade:YES];
+     // [self.mPos cancelTrade:YES];
   }
   else{
       result(FlutterMethodNotImplemented);
@@ -883,10 +883,6 @@ NSString *rsaPublic;
         NSLog(@"Tag: %@ value: %@", tlv.tag,tlv.value);
     }
     NSMutableArray *tagArray = [NSMutableArray array];
-    for(TLV *tlv in dict) {
-        NSDictionary *tlvdict = [self dictionaryRepresentation:tlv];
-        [tagArray addObject:tlvdict];
-    }
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:tagArray options:NSJSONWritingPrettyPrinted error:&error];
     if (!jsonData) {
