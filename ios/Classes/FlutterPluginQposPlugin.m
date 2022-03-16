@@ -880,13 +880,20 @@ NSString *rsaPublic;
 - (NSString *)parseDecoder:(NSString *) tlv {
     NSArray *dict = [TLVParser parse:tlv];
     NSError *error;
+    NSMutableArray *arr = [[NSMutableArray alloc] init];
     for (TLV *tlv in dict ) {
         NSLog(@"Tag: %@ value: %@", tlv.tag,tlv.value);
+        [arr addObject:tlv];
     }
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
-    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    NSLog(@"Resultado de parse: %@", jsonString);
-    return jsonString;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:arr options:NSJSONWritingPrettyPrinted error:&error];
+    if(!jsonData){
+        return nil;
+    } else {
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Resultado del parseo: %@",jsonString);
+        return jsonString;
+    }
+   
    // NSMutableArray *tagArray = [NSMutableArray array];
    // NSError *error;
    // NSData *jsonData = [NSJSONSerialization dataWithJSONObject:tagArray options:NSJSONWritingPrettyPrinted error:&error];
