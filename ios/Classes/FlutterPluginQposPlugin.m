@@ -877,25 +877,26 @@ NSString *rsaPublic;
     return mutStr;
 }
 
-- (NSString *)parseDecoder:(NSString *) tlv {
+- (NSArray *)parseDecoder:(NSString *) tlv {
     NSArray *dict = [TLVParser parse:tlv];
     NSLog(@"Se recibe el tlv a parsear: %@", tlv);
     NSLog(@"%@", dict);
     for (TLV *tlv in dict ) {
         NSLog(@"Tag: %@ value: %@", tlv.tag,tlv.value);
     }
-    NSMutableArray *tagArray = [NSMutableArray array];
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:tagArray options:NSJSONWritingPrettyPrinted error:&error];
-    if (!jsonData) {
-        return nil;
-    } else {
-        NSString* myString;
-        myString = [[NSString alloc] initWithData:jsonData encoding:NSASCIIStringEncoding];
-        NSLog(@"String con ASCII ENCODING: %@",myString);
-        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        NSLog(@"Resultado de funcion de parse: %@",jsonString);
-        return jsonString;
+    return dict;
+    //NSMutableArray *tagArray = [NSMutableArray array];
+    //NSError *error;
+    //NSData *jsonData = [NSJSONSerialization dataWithJSONObject:tagArray options:NSJSONWritingPrettyPrinted error:&error];
+    //if (!jsonData) {
+    //    return nil;
+    //} else {
+     //   NSString* myString;
+     //   myString = [[NSString alloc] initWithData:jsonData encoding:NSASCIIStringEncoding];
+     //   NSLog(@"String con ASCII ENCODING: %@",myString);
+     //   NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+     //   NSLog(@"Resultado de funcion de parse: %@",jsonString);
+     //   return jsonString;
     }
   //  NSDictionary *value = [SGTLVDecode decodeWithString:tlv];
   //  NSError *error;
