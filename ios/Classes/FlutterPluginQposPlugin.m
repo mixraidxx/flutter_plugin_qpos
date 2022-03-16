@@ -890,6 +890,7 @@ NSString *rsaPublic;
         return nil;
     } else {
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSLog(@"Resultado de funcion de parse: %@",jsonString);
         return jsonString;
     }
   //  NSDictionary *value = [SGTLVDecode decodeWithString:tlv];
