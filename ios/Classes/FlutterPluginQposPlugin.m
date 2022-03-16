@@ -910,7 +910,7 @@ NSString *rsaPublic;
      //   NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
        // return jsonString;
     //}
-}
+//}
 
 - (void)onDoSetRsaPublicKey:(BOOL)result{
     NSLog(@"Entra en resultado de setRSA");
