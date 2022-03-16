@@ -878,32 +878,15 @@ NSString *rsaPublic;
 }
 
 - (NSString *)parseDecoder:(NSString *) tlv {
-    NSArray *dict = [TLVParser parse:tlv];
-    for (TLV *tlv in dict ) {
-        NSLog(@"Tag: %@ value: %@", tlv.tag,tlv.value);
-    }
     NSMutableArray *tagArray = [NSMutableArray array];
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:tagArray options:NSJSONWritingPrettyPrinted error:&error];
     if (!jsonData) {
-        NSLog(@"Got an error: %@", error);
         return nil;
     } else {
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         return jsonString;
     }
-  //  NSDictionary *value = [SGTLVDecode decodeWithString:tlv];
-  //  NSError *error;
-  //  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:value
-    //                                                   options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
-                                                         //error:&error];
-    //if (! jsonData) {
-     //   NSLog(@"Got an error: %@", error);
-      //  return nil;
-    //} else {
-     //   NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-       // return jsonString;
-    //}
 }
 
 - (void)onDoSetRsaPublicKey:(BOOL)result{

@@ -20,7 +20,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  flutter_plugin_qpos: b45a3471059bad5927c8b6c844dacbebc1f82b59
+  flutter_plugin_qpos: 0c027ec8f3b6ea51cbec1674a407d322191c5f9e
   permission_handler: 67637977b227d62d46bfbf524f335f8568de5a73
 
 PODFILE CHECKSUM: 8e679eca47255a8ca8067c4c67aab20e64cb974d
