@@ -877,12 +877,16 @@ NSString *rsaPublic;
     return mutStr;
 }
 
-- (NSArray<TLV *> *)parseDecoder:(NSString *) tlv {
+- (NSString *)parseDecoder:(NSString *) tlv {
     NSArray *dict = [TLVParser parse:tlv];
+    NSError *error;
     for (TLV *tlv in dict ) {
         NSLog(@"Tag: %@ value: %@", tlv.tag,tlv.value);
     }
-    return dict;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    NSLog(@"Resultado de parse: %@", jsonString);
+    return jsonString;
    // NSMutableArray *tagArray = [NSMutableArray array];
    // NSError *error;
    // NSData *jsonData = [NSJSONSerialization dataWithJSONObject:tagArray options:NSJSONWritingPrettyPrinted error:&error];
