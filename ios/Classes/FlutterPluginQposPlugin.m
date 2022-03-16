@@ -880,6 +880,7 @@ NSString *rsaPublic;
 - (NSString *)parseDecoder:(NSString *) tlv {
     NSArray *dict = [TLVParser parse:tlv];
     NSLog(@"Se recibe el tlv a parsear: %@", tlv);
+    NSLog(@"%@", dict);
     for (TLV *tlv in dict ) {
         NSLog(@"Tag: %@ value: %@", tlv.tag,tlv.value);
     }
