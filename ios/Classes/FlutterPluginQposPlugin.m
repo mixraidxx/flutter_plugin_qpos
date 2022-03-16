@@ -889,6 +889,9 @@ NSString *rsaPublic;
     if (!jsonData) {
         return nil;
     } else {
+        NSString* myString;
+        myString = [[NSString alloc] initWithData:jsonData encoding:NSASCIIStringEncoding];
+        NSLog(@"String con ASCII ENCODING: %@",myString);
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         NSLog(@"Resultado de funcion de parse: %@",jsonString);
         return jsonString;
