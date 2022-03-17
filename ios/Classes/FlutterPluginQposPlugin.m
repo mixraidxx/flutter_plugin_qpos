@@ -105,7 +105,7 @@ NSString *rsaPublic;
   }else if ([@"sendOnlineProcessResult" isEqualToString:call.method]) {
       NSString *processResult = [call.arguments objectForKey:@"onlineProcessResult"];
       NSLog(@"sendOnlineProcessResult: %@",processResult);
-      [self.mPos sendOnlineProcessResult:@"8A023030"];
+      [self.mPos sendOnlineProcessResult:processResult delay:10];
   }else if ([@"stopScanQPos2Mode" isEqualToString:call.method]) {
       [self.bt stopQPos2Mode];
   }else if ([@"scanQPos2Mode" isEqualToString:call.method]) {
@@ -818,36 +818,6 @@ NSString *rsaPublic;
         return data;
     }
     return nil;
-//    NSString* binFile = [[NSBundle mainBundle]pathForResource:name ofType:@".bin"];
-//    NSString* ascFile = [[NSBundle mainBundle]pathForResource:name ofType:@".asc"];
-//    NSString* xmlFile = [[NSBundle mainBundle]pathForResource:name ofType:@".xml"];
-//    NSString* pemFile = [[NSBundle mainBundle]pathForResource:name ofType:@".pem"];
-//
-//
-//    NSLog(@"pemFile: %@",pemFile);
-//    if (binFile!= nil && ![binFile isEqualToString: @""]) {
-//        NSFileManager* Manager = [NSFileManager defaultManager];
-//        NSData* data1 = [[NSData alloc] init];
-//        data1 = [Manager contentsAtPath:binFile];
-//        return data1;
-//    }else if (ascFile!= nil && ![ascFile isEqualToString: @""]){
-//        NSFileManager* Manager = [NSFileManager defaultManager];
-//        NSData* data2 = [[NSData alloc] init];
-//        data2 = [Manager contentsAtPath:ascFile];
-//        return data2;
-//    }else if (xmlFile!= nil && ![xmlFile isEqualToString: @""]){
-//        NSFileManager* Manager = [NSFileManager defaultManager];
-//        NSData* data2 = [[NSData alloc] init];
-//        data2 = [Manager contentsAtPath:xmlFile];
-//        return data2;
-//    }else if (pemFile!= nil && ![pemFile isEqualToString: @""]){
-//        NSFileManager* Manager = [NSFileManager defaultManager];
-//        NSData* data2 = [[NSData alloc] init];
-//        data2 = [Manager contentsAtPath:pemFile];
-//        NSLog(@"pemFile: %@", pemFile);
-//        return data2;
-//    }
-//    return nil;
 }
 
 - (NSString *)convertToJsonData:(NSDictionary *)dict
@@ -882,13 +852,11 @@ NSString *rsaPublic;
        NSMutableArray *TagsJSONArray = [NSMutableArray array];
        NSError* error = nil;
           for (TLV *tlv in dict ) {
-              NSLog(@"Tag: %@ value: %@", tlv.tag,tlv.value);
               NSDictionary *dicts = [self dictionaryRepresentation:tlv];
               [TagsJSONArray addObject: dicts];
           }
        NSData *tagJSONData = [NSJSONSerialization dataWithJSONObject:TagsJSONArray options:NSJSONWritingPrettyPrinted error:&error];
        NSData *tasgJsonString = [[NSString alloc] initWithData:tagJSONData encoding:NSUTF8StringEncoding];
-       NSLog(@"jsonString: %@", tasgJsonString);
        return tasgJsonString;
 }
 
