@@ -1,5 +1,6 @@
 #import "FlutterPluginQposPlugin.h"
 #import "SGTLVDecode.h"
+#import "flutter_plugin_qpos-Swift.h"
 #import "TLVParser.h"
 
 @interface FlutterPluginQposPlugin()
@@ -878,44 +879,10 @@ NSString *rsaPublic;
 }
 
 - (NSString *)parseDecoder:(NSString *) tlv {
-    NSArray *dict = [TLVParser parse:tlv];
-    NSError *error;
-    NSMutableArray *arr = [[NSMutableArray alloc] init];
-    for (TLV *tlv in dict ) {
-        NSLog(@"Tag: %@ value: %@", tlv.tag,tlv.value);
-        [arr addObject:tlv];
-    }
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:arr options:NSJSONWritingPrettyPrinted error:&error];
-    if(!jsonData){
-        return nil;
-    } else {
-        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        NSLog(@"Resultado del parseo: %@",jsonString);
-        return jsonString;
-    }
-   
-   // NSMutableArray *tagArray = [NSMutableArray array];
-   // NSError *error;
-   // NSData *jsonData = [NSJSONSerialization dataWithJSONObject:tagArray options:NSJSONWritingPrettyPrinted error:&error];
-   // if (!jsonData) {
-   //     NSLog(@"Got an error: %@", error);
-   //     return nil;
-   // } else {
-   //     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-   //     return jsonString;
-   // }
-  //  NSDictionary *value = [SGTLVDecode decodeWithString:tlv];
-  //  NSError *error;
-  //  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:value
-    //                                                   options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
-                                                         //error:&error];
-    //if (! jsonData) {
-     //   NSLog(@"Got an error: %@", error);
-      //  return nil;
-    //} else {
-     //   NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-       // return jsonString;
-    //}
+    TestSwift *hola = [[TestSwift alloc] init];
+    [hola hello];
+    NSString *result = [hola TLVParseWithTlv:tlv];
+    return result;
 }
 
 - (void)onDoSetRsaPublicKey:(BOOL)result{
