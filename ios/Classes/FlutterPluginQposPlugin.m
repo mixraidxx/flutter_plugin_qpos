@@ -1,5 +1,6 @@
 #import "FlutterPluginQposPlugin.h"
 #import "SGTLVDecode.h"
+#import "flutter_plugin_qpos-Swift.h"
 #import "TLVParser.h"
 
 @interface FlutterPluginQposPlugin()
