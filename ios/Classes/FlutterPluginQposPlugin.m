@@ -879,10 +879,18 @@ NSString *rsaPublic;
 }
 
 - (NSString *)parseDecoder:(NSString *) tlv {
-    TestSwift *hola = [[TestSwift alloc] init];
-    [hola hello];
-    NSString *result = [hola TLVParseWithTlv:tlv];
-    return result;
+    NSArray *dict = [TLVParser parse:tlv];
+       NSMutableArray *TagsJSONArray = [NSMutableArray array];
+       NSError* error = nil;
+          for (TLV *tlv in dict ) {
+              NSLog(@"Tag: %@ value: %@", tlv.tag,tlv.value);
+              NSDictionary *dicts = [self dictionaryRepresentation:tlv];
+              [TagsJSONArray addObject: dicts];
+          }
+       NSData *tagJSONData = [NSJSONSerialization dataWithJSONObject:TagsJSONArray options:NSJSONWritingPrettyPrinted error:&error];
+       NSData *tasgJsonString = [[NSString alloc] initWithData:tagJSONData encoding:NSUTF8StringEncoding];
+       NSLog(@"jsonString: %@", tasgJsonString);
+       return tasgJsonString;
 }
 
 - (void)onDoSetRsaPublicKey:(BOOL)result{
