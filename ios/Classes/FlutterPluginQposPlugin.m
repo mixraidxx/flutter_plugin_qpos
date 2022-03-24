@@ -45,9 +45,9 @@ NSString *rsaPublic;
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-  NSLog(@"method: %@-----arguments: %@----result: %@",call.method, call.arguments, result);
+  // NSLog(@"method: %@-----arguments: %@----result: %@",call.method, call.arguments, result);
     if (resultFlutter == nil) {
-        NSLog(@"inicia resultFlutter");
+        // NSLog(@"inicia resultFlutter");
         resultFlutter = result;
     }
   if ([@"getPosSdkVersion" isEqualToString:call.method]) {
@@ -64,7 +64,7 @@ NSString *rsaPublic;
   } else if ([@"getUpdateCheckValue" isEqualToString:call.method]) {
       [self.mPos getUpdateCheckValueBlock:^(BOOL isSuccess, NSString *stateStr) {
           if (isSuccess) {
-              NSLog(@"%@",stateStr);
+              // NSLog(@"%@",stateStr);
           }
       }];
   } else if ([@"getKeyCheckValue" isEqualToString:call.method]) {
@@ -104,7 +104,7 @@ NSString *rsaPublic;
       [self.mPos selectEmvApp:position];
   }else if ([@"sendOnlineProcessResult" isEqualToString:call.method]) {
       NSString *processResult = [call.arguments objectForKey:@"onlineProcessResult"];
-      NSLog(@"sendOnlineProcessResult: %@",processResult);
+      // NSLog(@"sendOnlineProcessResult: %@",processResult);
       [self.mPos sendOnlineProcessResult:processResult delay:10];
   }else if ([@"stopScanQPos2Mode" isEqualToString:call.method]) {
       [self.bt stopQPos2Mode];
@@ -123,7 +123,7 @@ NSString *rsaPublic;
       NSString *pinipekCheckvalue = [call.arguments objectForKey:@"pinipekCheckvalue"];
       [self.mPos doUpdateIPEKOperation:keyIndex tracksn:trackksn trackipek:trackipek trackipekCheckValue:trackipekCheckvalue emvksn:emvksn emvipek:emvipek emvipekcheckvalue:emvipekCheckvalue pinksn:pinksn pinipek:pinipek pinipekcheckValue:pinipekCheckvalue block:^(BOOL isSuccess, NSString *stateStr) {
          if (isSuccess) {
-             NSLog(@"success: %@",stateStr);
+             // NSLog(@"success: %@",stateStr);
          }
       }];
   }else if ([@"setMasterKey" isEqualToString:call.method]) {
@@ -136,13 +136,13 @@ NSString *rsaPublic;
   }else if ([@"generateTransportKey" isEqualToString:call.method ]) {
       NSInteger delay = 15;
       [self.mPos generateTransportKey:delay dataBlock:^(NSDictionary *data) {
-          NSLog(@"transportKey generado correctamente: %@",data);
+          // NSLog(@"transportKey generado correctamente: %@",data);
           NSError *error;
           NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data
                                                              options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
                                                                error:&error];
           if (! jsonData) {
-              NSLog(@"Got an error: %@", error);
+              // NSLog(@"Got an error: %@", error);
           } else {
               NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
               [self sendMessage:@"onRequestGenerateTransportKey" parameter:jsonString];
@@ -150,28 +150,28 @@ NSString *rsaPublic;
          
       }];
   }else if ([@"updateRSA" isEqualToString:call.method]){
-          NSLog(@"Actualiza llave rsa");
+          // NSLog(@"Actualiza llave rsa");
           NSString *rsaName = [call.arguments objectForKey:@"rsaName"];
           NSString *fileName =[NSString stringWithFormat:@"%@.pem", rsaName];
           NSString *pemStr = [QPOSUtil asciiFormatString: [self readLine:rsaName]];
-          NSLog(@"RSAName: %@", rsaName);
-          NSLog(@"FileName: %@", fileName);
-          NSLog(@"pemStr: %@", pemStr);
+          // NSLog(@"RSAName: %@", rsaName);
+          // NSLog(@"FileName: %@", fileName);
+          // NSLog(@"pemStr: %@", pemStr);
           [self.mPos updateRSA:pemStr pemFile:fileName];
   }else if ([@"sendCvv" isEqualToString:call.method]) {
-      NSLog(@"SendCVV");
+      // NSLog(@"SendCVV");
       NSString *cvv = [call.arguments objectForKey:@"cvv"];
       [self.mPos sendCVV:cvv resultBlock:^(BOOL success) {
           result(@(success));
       }];
   }else if([@"getEncryptedDataBlock" isEqualToString:call.method]){
-      NSLog(@"GETEncryptedData");
+      // NSLog(@"GETEncryptedData");
       NSInteger index = 0;
       [self.mPos getEncryptedDataBlock:index dataBlock:^(NSDictionary* data) {
           NSError *error;
           NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:&error];
           if (!jsonData) {
-              NSLog(@"Got an error: %@", error);
+              // NSLog(@"Got an error: %@", error);
           } else {
               NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
               result(jsonString);
@@ -185,9 +185,7 @@ NSString *rsaPublic;
       NSString *tagString = [call.arguments objectForKey:@"tagArrayStr"];
       int tags = [tagcounter intValue];
       NSDictionary *data = [self.mPos getICCTagNew:EncryptType_plaintext cardType:0 tagCount: tags tagArrStr:tagString];
-      NSLog(@"resultado de geticcTAGNew: %@",data);
       NSString *tlv = [data objectForKey:@"tlv"];
-      NSLog(@"resultado de geticcTAG: %@",tlv);
       result(tlv);
   }else if([@"updateWorkKeyByTransportKey" isEqualToString:call.method]) {
       NSString *key = [call.arguments objectForKey:@"key"];
@@ -208,19 +206,17 @@ NSString *rsaPublic;
       [capkTempArr addObject:capkStr1];
       [self.mPos updateEmvAPP:EMVOperation_update data:capkTempArr.copy block:^(BOOL isSuccess, NSString *stateStr) {
           if (isSuccess) {
-              NSLog(@"Se actulizaron correctamente los tags");
               [self sendMessage:@"onReturnUpdateEMVResult" parameter:@"true"];
           } else {
-              NSLog(@"Ocurrio un error: %@", stateStr);
               [self sendMessage:@"onReturnUpdateEMVResult" parameter:@"false"];
           }
       }];
   }else if([@"doCheckCard" isEqualToString:call.method]){
-      NSLog(@"doCheckCard");
+      // NSLog(@"doCheckCard");
       [self.mPos setCardTradeMode:CardTradeMode_SWIPE_INSERT_CARD];
       [self.mPos doCheckCard:30];
   } else if([@"cancelTrade" isEqualToString:call.method]) {
-      NSLog(@"CancelTrade");
+      // NSLog(@"CancelTrade");
      // [self.mPos cancelTrade:YES];
   }
   else{
@@ -258,11 +254,11 @@ NSString *rsaPublic;
 }
 
 -(void) onQposIdResult: (NSDictionary*)posId{
-    NSLog(@"onQposIdResult: %@", posId);
+    // NSLog(@"onQposIdResult: %@", posId);
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:posId options:NSJSONWritingPrettyPrinted error:&error];
     if (!jsonData) {
-        NSLog(@"Got an error: %@", error);
+        // NSLog(@"Got an error: %@", error);
     } else {
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         [self sendMessage:@"onQposIdResult" parameter:jsonString];
@@ -271,11 +267,11 @@ NSString *rsaPublic;
 }
 
 -(void) onQposInfoResult: (NSDictionary*)posInfoData{
-    NSLog(@"onQposInfoResult: %@",posInfoData);
+    // NSLog(@"onQposInfoResult: %@",posInfoData);
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:posInfoData options:NSJSONWritingPrettyPrinted error:&error];
     if (!jsonData) {
-        NSLog(@"Got an error: %@", error);
+        // NSLog(@"Got an error: %@", error);
     } else {
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         [self sendMessage:@"onQposInfoResult" parameter:jsonString];
@@ -286,11 +282,11 @@ NSString *rsaPublic;
 -(void)scanBluetooth{
     [self initPos];
     NSInteger delay = 15;
-    NSLog(@"蓝牙状态:%ld",(long)[self.bt getCBCentralManagerState]);
+    // NSLog(@"蓝牙状态:%ld",(long)[self.bt getCBCentralManagerState]);
     [self.bt setBluetoothDelegate2Mode:self];
     if ([self.bt getCBCentralManagerState] == CBCentralManagerStateUnknown) {
             while ([self.bt getCBCentralManagerState]!= CBCentralManagerStatePoweredOn) {
-                NSLog(@"Bluetooth state is not power on");
+                // NSLog(@"Bluetooth state is not power on");
                 [self sleepMs:10];
                 if(delay++==10){
                     return;
@@ -304,7 +300,7 @@ NSString *rsaPublic;
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
     NSString *aTitle = msgStr;
     NSInteger cancelIndex = actionSheet.cancelButtonIndex;
-    NSLog(@"selectEmvApp cancelIndex = %d , index = %d",cancelIndex,buttonIndex);
+    // NSLog(@"selectEmvApp cancelIndex = %d , index = %d",cancelIndex,buttonIndex);
     if ([aTitle isEqualToString:@"Please select app"]){
         if (buttonIndex==cancelIndex) {
             [self.mPos cancelSelectEmvApp];
@@ -322,7 +318,7 @@ NSString *rsaPublic;
 
 -(void)onBluetoothName2Mode:(NSString *)bluetoothName{
      if (bluetoothName != nil && ![bluetoothName isEqualToString:@""]) {
-           NSLog(@"蓝牙名: %@",bluetoothName);
+           // NSLog(@"蓝牙名: %@",bluetoothName);
          if (![allBluetooth containsObject:bluetoothName]) {
              [allBluetooth addObject:bluetoothName];
              NSString *temp = [NSString stringWithFormat:@"%@//%@",bluetoothName,bluetoothName];
@@ -356,7 +352,7 @@ NSString *rsaPublic;
 
 //callback of input pin on phone
 -(void) onRequestPinEntry{
-    NSLog(@"onRequestPinEntry");
+    // NSLog(@"onRequestPinEntry");
     NSString *msg = @"";
     mAlertView = [[UIAlertView new]
                   initWithTitle:NSLocalizedString(@"Please set pin", nil)
@@ -403,13 +399,13 @@ NSString *rsaPublic;
         msg = @"Amount out of limit.";
     }
     NSString *error = msg;
-    NSLog(@"onError = %@",msg);
+    // NSLog(@"onError = %@",msg);
     [self sendMessage:@"onError" parameter:error];
 }
 
 //开始执行start 按钮后返回的结果状态
 -(void) onDoTradeResult: (DoTradeResult)result DecodeData:(NSDictionary*)decodeData{
-    NSLog(@"onDoTradeResult?>> result %ld",(long)result);
+    // NSLog(@"onDoTradeResult?>> result %ld",(long)result);
     NSString *display = @"";
     if (result == DoTradeResult_NONE) {
         display = @"No card detected. Please insert or swipe card again and press check card.";
@@ -421,7 +417,7 @@ NSString *rsaPublic;
         display = @"Card Inserted (Not ICC)";
         [self sendMessage:@"onDoTradeResult" parameter:[NSString stringWithFormat:@"NOT_ICC||%@",display]];
     }else if(result==DoTradeResult_MCR){
-        NSLog(@"decodeData: %@",decodeData);
+        // NSLog(@"decodeData: %@",decodeData);
         NSString *formatID = [NSString stringWithFormat:@"Format ID: %@\n",decodeData[@"formatID"]] ;
         NSString *maskedPAN = [NSString stringWithFormat:@"Masked PAN: %@\n",decodeData[@"maskedPAN"]];
         NSString *expiryDate = [NSString stringWithFormat:@"Expiry Date: %@\n",decodeData[@"expiryDate"]];
@@ -452,7 +448,7 @@ NSString *rsaPublic;
         NSString *displayAmount = @"";
         [self sendMessage:@"onDoTradeResult" parameter:[NSString stringWithFormat:@"MSR||%@",display]];
     }else if(result==DoTradeResult_NFC_OFFLINE || result == DoTradeResult_NFC_ONLINE){
-        NSLog(@"decodeData: %@",decodeData);
+        // NSLog(@"decodeData: %@",decodeData);
         NSString *formatID = [NSString stringWithFormat:@"Format ID: %@\n",decodeData[@"formatID"]] ;
         NSString *maskedPAN = [NSString stringWithFormat:@"Masked PAN: %@\n",decodeData[@"maskedPAN"]];
         NSString *expiryDate = [NSString stringWithFormat:@"Expiry Date: %@\n",decodeData[@"expiryDate"]];
@@ -510,7 +506,7 @@ NSString *rsaPublic;
 }
 
 -(void) onRequestFinalConfirm{
-    NSLog(@"onRequestFinalConfirm-------amount = %@",self.inputAmount);
+    // NSLog(@"onRequestFinalConfirm-------amount = %@",self.inputAmount);
     NSString *msg = [NSString stringWithFormat:@"Amount: $%@",self.inputAmount];
     mAlertView = [[UIAlertView new]
                   initWithTitle:@"Confirm amount"
@@ -528,8 +524,8 @@ NSString *rsaPublic;
 }
 
 -(void) onRequestOnlineProcess: (NSString*) tlv{
-    NSLog(@"tlv == %@",tlv);
-    NSLog(@"onRequestOnlineProcess = %@",[[QPOSService sharedInstance] anlysEmvIccData:tlv]);
+    // NSLog(@"tlv == %@",tlv);
+    // NSLog(@"onRequestOnlineProcess = %@",[[QPOSService sharedInstance] anlysEmvIccData:tlv]);
     NSString *msg = @"Replied success.";
     NSString *displayStr = [@"onRequestOnlineProcess: " stringByAppendingString:tlv];
     msgStr = @"Request data to server.";
@@ -551,7 +547,7 @@ NSString *rsaPublic;
         default:
             break;
     }
-    NSLog(@"On RequestTransactionResult: %@", messageTextView);
+    // NSLog(@"On RequestTransactionResult: %@", messageTextView);
   //  if (transactionResult==TransactionResult_APPROVED) {
   //      NSString *message = [NSString stringWithFormat:@"Approved\nAmount: $%@\n",self.inputAmount];
   //      if([self.cashbackAmount isEqualToString:@""]) {
@@ -599,14 +595,14 @@ NSString *rsaPublic;
 }
 
 -(void) onRequestBatchData: (NSString*)tlv{
-    NSLog(@"onBatchData %@",tlv);
+    // NSLog(@"onBatchData %@",tlv);
     tlv = [@"batch data: " stringByAppendingString:tlv];
     NSString *displayStr = tlv;
     [self sendMessage:@"onRequestBatchData" parameter:displayStr];
 }
 
 -(void) onReturnReversalData: (NSString*)tlv{
-    NSLog(@"onReversalData %@",tlv);
+    // NSLog(@"onReversalData %@",tlv);
     tlv = [@"reversal data: " stringByAppendingString:tlv];
     NSString *displayStr = tlv;
     [self sendMessage:@"onReturnReversalData" parameter:displayStr];
@@ -614,7 +610,7 @@ NSString *rsaPublic;
 
 //pos 连接成功的回调
 -(void) onRequestQposConnected{
-    NSLog(@"onRequestQposConnected");
+    // NSLog(@"onRequestQposConnected");
     NSString *displayStr =@"";
     if ([self.bluetoothAddress  isEqual: @"audioType"]) {
         displayStr = @"AudioType connected.";
@@ -627,13 +623,13 @@ NSString *rsaPublic;
 }
 
 -(void) onRequestQposDisconnected{
-    NSLog(@"onRequestQposDisconnected");
+    // NSLog(@"onRequestQposDisconnected");
     NSString *displayStr = @"pos disconnected.";
     [self sendMessage:@"onRequestQposDisconnected" parameter:@""];
 }
 
 -(void) onRequestNoQposDetected{
-    NSLog(@"onRequestNoQposDetected");
+    // NSLog(@"onRequestNoQposDetected");
     NSString *displayStr = @"No pos detected.";
     [self sendMessage:@"onRequestNoQposDetected" parameter:@""];
 }
@@ -666,7 +662,7 @@ NSString *rsaPublic;
 }
 
 - (void)onGetKeyCheckValue:(NSDictionary *)checkValueResult{
-    NSLog(@"onGetKeyCheckValue: %@",checkValueResult);
+    // NSLog(@"onGetKeyCheckValue: %@",checkValueResult);
 }
 
 -(void) onReturnGetPinResult:(NSDictionary*)decodeData{
@@ -679,19 +675,19 @@ NSString *rsaPublic;
 }
 
 -(void) onRequestUpdateWorkKeyResult:(UpdateInformationResult)updateInformationResult{
-    NSLog(@"onRequestUpdateWorkKeyResult %ld",(long)updateInformationResult);
+    // NSLog(@"onRequestUpdateWorkKeyResult %ld",(long)updateInformationResult);
     NSString *updateResult = @"";
     if (updateInformationResult==UpdateInformationResult_UPDATE_SUCCESS) {
-        NSLog(@"Success");
+        // NSLog(@"Success");
         updateResult = @"Success";
     }else if(updateInformationResult==UpdateInformationResult_UPDATE_FAIL){
-         NSLog(@"Failed");
+         // NSLog(@"Failed");
         updateResult = @"Failed";
     }else if(updateInformationResult==UpdateInformationResult_UPDATE_PACKET_LEN_ERROR){
-         NSLog(@"Packet len error");
+         // NSLog(@"Packet len error");
         updateResult = @"Packet len error";
     }else if(updateInformationResult==UpdateInformationResult_UPDATE_PACKET_VEFIRY_ERROR){
-         NSLog(@"Packer vefiry error");
+         // NSLog(@"Packer vefiry error");
         updateResult = @"Packer vefiry error";
     }
     [self sendMessage:@"onUpdatePosFirmwareResult" parameter:updateResult];
@@ -708,16 +704,16 @@ NSString *rsaPublic;
 
 -(void) onReturnSetMasterKeyResult: (BOOL)isSuccess{
     if(isSuccess){
-         NSLog( @"Success");
+         // NSLog( @"Success");
     }else{
-         NSLog(@"Failed");
+         // NSLog(@"Failed");
     }
 }
 
 - (void)updateEMVConfigByXML{
-    NSLog(@"start update emv configure,pls wait");
+    // NSLog(@"start update emv configure,pls wait");
     NSData *xmlData = [self readLine:@"emv_profile_tlv"];
-    NSLog(@"xmlData; %@",xmlData);
+    // NSLog(@"xmlData; %@",xmlData);
     NSString *xmlStr = [QPOSUtil asciiFormatString:xmlData];
     [self.mPos updateEMVConfigByXml:xmlStr];
 }
@@ -725,11 +721,11 @@ NSString *rsaPublic;
 // callback function of updateEmvConfig and updateEMVConfigByXml api.
 -(void)onReturnCustomConfigResult:(BOOL)isSuccess config:(NSString*)resutl{
     if(isSuccess){
-        NSLog( @"Success");
+        // NSLog( @"Success");
     }else{
-        NSLog( @"Failed");
+        // NSLog( @"Failed");
     }
-    NSLog(@"result: %@",resutl);
+    // NSLog(@"result: %@",resutl);
 }
 
 // update pos firmware api
@@ -738,7 +734,7 @@ NSString *rsaPublic;
     if (data != nil) {
        NSInteger flag = [[QPOSService sharedInstance] updatePosFirmware:data address:self.bluetoothAddress];
         if (flag==-1) {
-            NSLog(@"Pos is not plugged in");
+            // NSLog(@"Pos is not plugged in");
             return;
         }
         self.updateFWFlag = true;
@@ -751,44 +747,44 @@ NSString *rsaPublic;
                         if (!self.updateFWFlag) {
                             return;
                         }
-                        NSLog(@"Current progress:%ld%%",(long)progress);
+                        // NSLog(@"Current progress:%ld%%",(long)progress);
                     });
                     continue;
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"finish upgrader");
+                    // NSLog(@"finish upgrader");
                 });
                 break;
             }
         });
     }else{
-        NSLog( @"pls make sure you have passed the right data");
+        // NSLog( @"pls make sure you have passed the right data");
     }
 }
 
 // callback function of updatePosFirmware api.
 -(void) onUpdatePosFirmwareResult:(UpdateInformationResult)updateInformationResult{
-    NSLog(@"%ld",(long)updateInformationResult);
+    // NSLog(@"%ld",(long)updateInformationResult);
     self.updateFWFlag = false;
     NSString *str = @"";
     if (updateInformationResult==UpdateInformationResult_UPDATE_SUCCESS) {
-        NSLog( @"Success");
+        // NSLog( @"Success");
         str = @"Success";
     }else if(updateInformationResult==UpdateInformationResult_UPDATE_FAIL){
-        NSLog( @"Failed");
+        // NSLog( @"Failed");
         str = @"Failed";
     }else if(updateInformationResult==UpdateInformationResult_UPDATE_PACKET_LEN_ERROR){
-        NSLog( @"Packet len error");
+        // NSLog( @"Packet len error");
         str = @"Packet len error";
     }else if(updateInformationResult==UpdateInformationResult_UPDATE_PACKET_VEFIRY_ERROR){
-        NSLog( @"Packer vefiry error");
+        // NSLog( @"Packer vefiry error");
         str = @"Packer vefiry error";
     }
     [self sendMessage:@"onUpdatePosFirmwareResult" parameter:str];
 }
 
 - (NSData*)readLine:(NSString*)name{
-    NSLog(@"entra en readline");
+    // NSLog(@"entra en readline");
     NSString* fileName;
     if ([name  isEqual: @"public_prod"]) {
         fileName = publicProd;
@@ -797,7 +793,7 @@ NSString *rsaPublic;
     }
     
     NSString* pemFile = [[NSBundle mainBundle]pathForResource:fileName ofType:nil];
-    NSLog(@"pemFile: %@", pemFile);
+    // NSLog(@"pemFile: %@", pemFile);
     if (pemFile != nil && ![pemFile isEqualToString:@""]) {
         NSFileManager* Manager = [NSFileManager defaultManager];
         NSData* data = [[NSData alloc]init];
@@ -814,7 +810,7 @@ NSString *rsaPublic;
     NSString *jsonString;
 
     if (!jsonData) {
-        NSLog(@"%@",error);
+        // NSLog(@"%@",error);
     } else {
         jsonString = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
@@ -848,8 +844,8 @@ NSString *rsaPublic;
 }
 
 - (void)onDoSetRsaPublicKey:(BOOL)result{
-    NSLog(@"Entra en resultado de setRSA");
-    NSLog(@"onDoSetRsaPublicKey: %d", result);
+    // NSLog(@"Entra en resultado de setRSA");
+    // NSLog(@"onDoSetRsaPublicKey: %d", result);
     if(result){
         [self sendMessage:@"onQposDoSetRsaPublicKey" parameter:@"true"];
     } else {
