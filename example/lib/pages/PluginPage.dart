@@ -37,6 +37,7 @@ final communicationMode = const [
 ];
 
 final emvTagsStr = const [
+  // '5F20'
   '9F27',
   '95',
   '9F26',
@@ -78,7 +79,7 @@ final emvTagsStr = const [
   '5F24',
   '5F30',
   '57',
-  // 'C4'
+  'C4'
 ];
 
 class _MyAppState extends State<PluginPage> {

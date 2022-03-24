@@ -181,28 +181,14 @@ NSString *rsaPublic;
       NSString *tlv = [call.arguments objectForKey:@"tlv"];
       result([self parseDecoder:tlv]);
   } else if([@"getICCTag" isEqualToString:call.method]){
-      BOOL cipher = [call.arguments objectForKey:@"cipher"];
       NSNumber *tagcounter = [call.arguments objectForKey:@"tagCounter"];
       NSString *tagString = [call.arguments objectForKey:@"tagArrayStr"];
-      EncryptType iscipher;
-      if (cipher) {
-          iscipher = EncryptType_encrypted;
-      } else {
-          iscipher = EncryptType_plaintext;
-      }
-//      NSError *error;
-      NSDictionary *data = [self.mPos getICCTagNew:iscipher cardType:0 tagCount:tagcounter tagArrStr:tagString];
-      //NSDictionary *data =  [self.mPos getICCTag:iscipher tagCount:tagcounter.integerValue tagArrStr:tagString];
+      int tags = [tagcounter intValue];
+      NSDictionary *data = [self.mPos getICCTagNew:EncryptType_plaintext cardType:0 tagCount: tags tagArrStr:tagString];
+      NSLog(@"resultado de geticcTAGNew: %@",data);
       NSString *tlv = [data objectForKey:@"tlv"];
       NSLog(@"resultado de geticcTAG: %@",tlv);
       result(tlv);
-//      NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:&error];
-//      if (!jsonData) {
-//          NSLog(@"Got an error: %@",error);
-//      } else {
-//          NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-//          result(jsonString);
-//      }
   }else if([@"updateWorkKeyByTransportKey" isEqualToString:call.method]) {
       NSString *key = [call.arguments objectForKey:@"key"];
       NSString *cvk = [call.arguments objectForKey:@"cvk"];
