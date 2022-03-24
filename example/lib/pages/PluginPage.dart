@@ -36,6 +36,51 @@ final communicationMode = const [
   'UNKNOW',
 ];
 
+final emvTagsStr = const [
+  '9F27',
+  '95',
+  '9F26',
+  '9F02',
+  '9F03',
+  '82',
+  '9F36',
+  '9F1A',
+  '5F2A',
+  '9A',
+  '9C',
+  '9F37',
+  '9F10',
+  '9F1E',
+  '9F33',
+  '9F35',
+  '9F09',
+  '9F34',
+  '84',
+  '5F34',
+  '5F20',
+  '9F16',
+  '9F4E',
+  '8E',
+  '5F25',
+  '4F',
+  '9F07',
+  '9F0D',
+  '9F03',
+  '9F0F',
+  '9F39',
+  '9B',
+  '5F28',
+  '9F4C',
+  '50',
+  '9F06',
+  '9F21',
+  '9F11',
+  '5F24',
+  '5F30',
+  '57',
+  // 'C4'
+];
+
 class _MyAppState extends State<PluginPage> {
   FlutterPluginQpos _flutterPluginQpos = FlutterPluginQpos();
   String _platformVersion = 'Unknown';
@@ -842,13 +887,39 @@ class _MyAppState extends State<PluginPage> {
 
   void requestSendCVV() async {
     print("Entra en cvv request");
+
     final result = await _flutterPluginQpos.sendCvv("");
     if (result) {
       log("Send cvv success");
-      final data = await _flutterPluginQpos.getEncryptedDataBlock();
-      log(data);
-      String str = "8A023030";
-      _flutterPluginQpos.sendOnlineProcessResult(str);
+      await _flutterPluginQpos.getEncryptedDataBlock().then((value) async {
+        log("get encrypted data block success");
+        log(value);
+
+        // Timer(Duration(seconds: 9), () {
+        //   log("espera respuesta del banco");
+        //   String str = "8A023030";
+        //   _flutterPluginQpos.sendOnlineProcessResult(str);
+        // });
+        var tagsRequired = "";
+        //var tagsRequired2 = "";
+        emvTagsStr.forEach((element) {
+          tagsRequired += element;
+        });
+        await _flutterPluginQpos
+            .getICCTag(
+                encryption: false,
+                tagCounter: emvTagsStr.length,
+                tagArrayStr: tagsRequired)
+            .then((value) {
+          log("recibe tags");
+          log(value);
+          Timer(Duration(seconds: 9), () {
+            log("espera respuesta del banco");
+            String str = "8A023030";
+            _flutterPluginQpos.sendOnlineProcessResult(str);
+          });
+        });
+      });
     } else {
       print("Send cvv fail");
     }

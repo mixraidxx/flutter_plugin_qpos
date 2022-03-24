@@ -191,7 +191,8 @@ NSString *rsaPublic;
           iscipher = EncryptType_plaintext;
       }
 //      NSError *error;
-      NSDictionary *data =  [self.mPos getICCTag:iscipher tagCount:tagcounter.integerValue tagArrStr:tagString];
+      NSDictionary *data = [self.mPos getICCTagNew:iscipher cardType:0 tagCount:tagcounter tagArrStr:tagString];
+      //NSDictionary *data =  [self.mPos getICCTag:iscipher tagCount:tagcounter.integerValue tagArrStr:tagString];
       NSString *tlv = [data objectForKey:@"tlv"];
       NSLog(@"resultado de geticcTAG: %@",tlv);
       result(tlv);
