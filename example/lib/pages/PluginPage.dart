@@ -1,4 +1,6 @@
 import 'dart:collection';
+import 'dart:developer';
+//import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -318,7 +320,7 @@ class _MyAppState extends State<PluginPage> {
     if (parameters != null && parameters.length > 0) {
       paras = parameters.split("||");
     }
-
+    log("Recibe el metodo: $method");
     switch (method) {
       case 'onRequestTransactionResult':
         setState(() {
@@ -402,11 +404,12 @@ class _MyAppState extends State<PluginPage> {
             display = paras[1];
           });
         }
-        requestSendCVV();
+
         break;
       case 'onQposIdResult':
         break;
       case 'onError':
+        log(parameters);
         setState(() {
           display = parameters;
         });
@@ -497,7 +500,6 @@ class _MyAppState extends State<PluginPage> {
         break;
       case 'onUpdatePosFirmwareProcessChanged':
         print('onUpdatePosFirmwareProcessChanged${parameters}');
-
         print('onUpdatePosFirmwareProcessChanged${double.parse(parameters)}');
         if (pr != null && pr.isShowing()) {
           pr.update(
@@ -563,6 +565,7 @@ class _MyAppState extends State<PluginPage> {
         params['cashbackAmount'] = "";
         params['currencyCode'] = "156";
         params['transactionType'] = "GOODS";
+        print("Entra en setAmount");
         _flutterPluginQpos.setAmount(params);
         break;
       case 'onReturnGetEMVListResult':
@@ -579,8 +582,8 @@ class _MyAppState extends State<PluginPage> {
       case 'onRequestNoQposDetected':
         break;
       case 'onRequestOnlineProcess':
-        String str = "8A023030"; //Currently the default value,
-        _flutterPluginQpos.sendOnlineProcessResult(str); //脚本通知/55域/ICCDATA
+        print("Entra en request online Process");
+        requestSendCVV();
 
         break;
       case 'onBluetoothBondFailed':
@@ -838,11 +841,14 @@ class _MyAppState extends State<PluginPage> {
   }
 
   void requestSendCVV() async {
-    final result = await _flutterPluginQpos.sendCvv("000");
+    print("Entra en cvv request");
+    final result = await _flutterPluginQpos.sendCvv("");
     if (result) {
-      print("Send cvv success");
+      log("Send cvv success");
       final data = await _flutterPluginQpos.getEncryptedDataBlock();
-      print(data);
+      log(data);
+      String str = "8A023030";
+      _flutterPluginQpos.sendOnlineProcessResult(str);
     } else {
       print("Send cvv fail");
     }

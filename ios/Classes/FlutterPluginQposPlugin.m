@@ -79,7 +79,7 @@ NSString *rsaPublic;
       NSString *currencyCode = [call.arguments objectForKey:@"currencyCode"];
       NSInteger transactionType = [[call.arguments objectForKey:@"transactionType"] integerValue];
       self.inputAmount = amount;
-      [self.mPos setAmount:amount aAmountDescribe:cashbackAmount currency:currencyCode transactionType:mTransType];
+      [self.mPos setAmount:amount aAmountDescribe:@"123" currency:@"0156" transactionType:mTransType];
   } else if ([@"doEmvApp" isEqualToString:call.method]) {
       [self.mPos doEmvApp:EmvOption_START];
   } else if ([@"sendTime" isEqualToString:call.method]) {
@@ -352,10 +352,10 @@ NSString *rsaPublic;
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     [dateFormatter setDateFormat:@"yyyyMMddHHmmss"];
     self.terminalTime = [dateFormatter stringFromDate:[NSDate date]];
-    mTransType = TransactionType_GOODS;
-    _currencyCode = @"156";
+    mTransType = TransactionType_SALE;
+    _currencyCode = @"0156";
     [self.mPos setCardTradeMode:CardTradeMode_SWIPE_TAP_INSERT_CARD];
-    [self.mPos doTrade:30];
+    [self.mPos doCheckCard:30];
 }
 
 -(void) onRequestSetAmount{
