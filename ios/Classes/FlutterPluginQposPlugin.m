@@ -444,9 +444,12 @@ NSString *rsaPublic;
         msg = [msg stringByAppendingString:pinBlock];
         msg = [msg stringByAppendingString:encPAN];
         display = msg;
+        NSData* data = [display dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         self.inputAmount = @"";
         NSString *displayAmount = @"";
-        [self sendMessage:@"onDoTradeResult" parameter:[NSString stringWithFormat:@"MSR||%@",display]];
+        NSLog(@"Trade Result: %@",jsonString);
+        [self sendMessage:@"onDoTradeResult" parameter:[NSString stringWithFormat:@"MCR||%@",jsonString]];
     }else if(result==DoTradeResult_NFC_OFFLINE || result == DoTradeResult_NFC_ONLINE){
         // NSLog(@"decodeData: %@",decodeData);
         NSString *formatID = [NSString stringWithFormat:@"Format ID: %@\n",decodeData[@"formatID"]] ;
