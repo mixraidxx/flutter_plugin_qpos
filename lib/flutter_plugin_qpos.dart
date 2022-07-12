@@ -216,31 +216,31 @@ class FlutterPluginQpos {
     await _methodChannel.invokeMethod('pinMapSync', params);
   }
 
-  Future<String?> generateIPEK(String bdk, String ksn) async {
-    Map<String, String> params = Map<String, String>();
-    params['ksn'] = ksn;
-    params['bdk'] = bdk;
-    final String? result =
-        await _methodChannel.invokeMethod('generateIPEK', params);
-    return result;
-  }
+  // Future<String?> generateIPEK(String bdk, String ksn) async {
+  //   Map<String, String> params = Map<String, String>();
+  //   params['ksn'] = ksn;
+  //   params['bdk'] = bdk;
+  //   final String? result =
+  //       await _methodChannel.invokeMethod('generateIPEK', params);
+  //   return result;
+  // }
 
-  Future<String?> generateCheckValue(String key) async {
-    Map<String, String> params = Map<String, String>();
-    params['key'] = key;
-    final String? result =
-        await _methodChannel.invokeMethod("generateCheckValue", params);
-    return result;
-  }
+  // Future<String?> generateCheckValue(String key) async {
+  //   Map<String, String> params = Map<String, String>();
+  //   params['key'] = key;
+  //   final String? result =
+  //       await _methodChannel.invokeMethod("generateCheckValue", params);
+  //   return result;
+  // }
 
-  Future<String?> tripleDesEncryption(String key, String data) async {
-    Map<String, String> params = Map<String, String>();
-    params['key'] = key;
-    params['data'] = data;
-    final String? result =
-        await _methodChannel.invokeMethod("tripleDesEncryption", params);
-    return result;
-  }
+  // Future<String?> tripleDesEncryption(String key, String data) async {
+  //   Map<String, String> params = Map<String, String>();
+  //   params['key'] = key;
+  //   params['data'] = data;
+  //   final String? result =
+  //       await _methodChannel.invokeMethod("tripleDesEncryption", params);
+  //   return result;
+  // }
 
   void generateTransportKey() async {
     await _methodChannel.invokeMethod("generateTransportKey");
