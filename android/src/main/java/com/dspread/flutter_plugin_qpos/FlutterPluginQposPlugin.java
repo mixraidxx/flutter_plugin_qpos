@@ -261,17 +261,6 @@ public class FlutterPluginQposPlugin implements FlutterPlugin, MethodCallHandler
             String value = call.argument("value");
             PosPluginHandler.pinMapSync(value);
 
-        } else if (call.method.equals("generateIPEK")) {
-            String ksn = call.argument("ksn");
-            String bdk = call.argument("bdk");
-            result.success(PosPluginHandler.generateIPEK(ksn,bdk));
-        } else if (call.method.equals("generateCheckValue")){
-            String key = call.argument("key");
-            result.success(PosPluginHandler.generateCheckValue(key));
-        } else if (call.method.equals("tripleDesEncryption")) {
-            String key = call.argument("key");
-            String data = call.argument("data");
-            result.success(PosPluginHandler.tripleDesEncryption(key,data));
         } else if(call.method.equals("generateTransportKey")){
             PosPluginHandler.generateTransportKey();
         } else if(call.method.equals("stopScanQPos2Mode")){
