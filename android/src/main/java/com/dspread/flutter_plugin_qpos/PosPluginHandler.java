@@ -25,12 +25,6 @@ import Decoder.BASE64Decoder;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodChannel.Result;
 
-import static com.dspread.demoui.utils.DUKPK2009_CBC.GenerateCheckValue;
-import static com.dspread.demoui.utils.DUKPK2009_CBC.GenerateIPEK;
-import static com.dspread.demoui.utils.DUKPK2009_CBC.TriDesEncryption;
-import static com.dspread.demoui.utils.DUKPK2009_CBC.parseByte2HexStr;
-import static com.dspread.demoui.utils.DUKPK2009_CBC.parseHexStr2Byte;
-
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.pkcs.RSAPublicKey;
@@ -287,28 +281,28 @@ public class PosPluginHandler {
         mPos.pinMapSync(value,20);
     }
 
-    public static String generateIPEK(String ksn, String bdk){
-        byte[] byte_bdk = parseHexStr2Byte(bdk);
-        byte[] byte_ksn = parseHexStr2Byte(ksn);
-        byte[] ipek = GenerateIPEK(byte_ksn,byte_bdk);
-        String ipekStr = parseByte2HexStr(ipek);
-        return ipekStr;
-    }
+    // public static String generateIPEK(String ksn, String bdk){
+    //     byte[] byte_bdk = parseHexStr2Byte(bdk);
+    //     byte[] byte_ksn = parseHexStr2Byte(ksn);
+    //     byte[] ipek = GenerateIPEK(byte_ksn,byte_bdk);
+    //     String ipekStr = parseByte2HexStr(ipek);
+    //     return ipekStr;
+    // }
 
-    public static String generateCheckValue(String Key) {
-        byte[] key = parseHexStr2Byte(Key);
-        byte[] check = GenerateCheckValue(key);
-        String checkStr = parseByte2HexStr(check);
-        return checkStr.substring(0,6);
-    }
+    // public static String generateCheckValue(String Key) {
+    //     byte[] key = parseHexStr2Byte(Key);
+    //     byte[] check = GenerateCheckValue(key);
+    //     String checkStr = parseByte2HexStr(check);
+    //     return checkStr.substring(0,6);
+    // }
 
-    public static String tripleDesEncryption(String Key, String data){
-        byte[] byte_key = parseHexStr2Byte(Key);
-        byte[] byte_data = parseHexStr2Byte(data);
-        byte[] encryp = TriDesEncryption(byte_key, byte_data);
-        String encrypStr = parseByte2HexStr(encryp);
-        return encrypStr;
-    }
+    // public static String tripleDesEncryption(String Key, String data){
+    //     byte[] byte_key = parseHexStr2Byte(Key);
+    //     byte[] byte_data = parseHexStr2Byte(data);
+    //     byte[] encryp = TriDesEncryption(byte_key, byte_data);
+    //     String encrypStr = parseByte2HexStr(encryp);
+    //     return encrypStr;
+    // }
 
     public static void generateTransportKey() {
         mPos.generateTransportKey(20);
